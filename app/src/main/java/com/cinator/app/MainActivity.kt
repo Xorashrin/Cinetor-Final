@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.cinator.app.compat.CompatibilityMatrixParser
 import com.cinator.app.data.CatalogCache
 import com.cinator.app.data.CatalogRepository
 import com.cinator.app.data.EmbeddedCatalog
@@ -148,6 +149,14 @@ fun CinatorApp() {
         runCatching {
             context.assets.open("embedded_directory_snapshot.json").bufferedReader().use {
                 ReferenceCatalog.parse(it.readText())
+            }
+        }
+    }
+
+    val compatibilityResult = remember {
+        runCatching {
+            context.assets.open("provider_compatibility.json").bufferedReader().use {
+                CompatibilityMatrixParser.parse(it.readText())
             }
         }
     }
@@ -654,6 +663,10 @@ fun CinatorApp() {
                                     sectionStates = listOf(homeState, animeState, kdramaState, liveTvState, adultState),
                                     references = referencesResult.getOrNull(),
                                     referencesError = referencesResult.exceptionOrNull()?.message,
+                                    compatibilityMatrix = compatibilityResult.getOrNull(),
+                                    compatibilityError = compatibilityResult.exceptionOrNull()?.let {
+                                        it.message ?: it.javaClass.simpleName
+                                    },
                                     onLiveTvQueryChange = { onSearchQueryChange(FeedSection.LIVETV, it) },
                                     onSyncLiveTv = { loadSection(FeedSection.LIVETV, liveTvState.searchQuery) },
                                     onSelectCard = { selectCard(it) },

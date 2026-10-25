@@ -8,5 +8,6 @@ local.properties
 *.aab
 .idea/
 *.iml
+scratch/
 __pycache__/
 *.pyc

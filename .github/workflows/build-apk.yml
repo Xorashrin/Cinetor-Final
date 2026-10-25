@@ -27,6 +27,8 @@ jobs:
           cmdline-tools-version: 12266719
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
           log-accepted-android-sdk-licenses: false
+      - name: Verify generated compatibility and review ledger
+        run: python3 scripts/generate_compatibility_matrix.py --output app/src/main/assets/provider_compatibility.json --plugin-ledger-output app/src/main/assets/plugin_review_ledger.json --check
       - name: Verify Python evidence tools
         run: python3 -B -m unittest discover -s scripts -p 'test_*.py'
       - name: Run unit tests, lint, and build debug APK

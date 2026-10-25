@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cinator.app.compat.CompatibilityMatrix
 import com.cinator.app.domain.BdixHostStatus
 import com.cinator.app.domain.DownloadEntry
 import com.cinator.app.domain.DownloadStatus
@@ -70,7 +71,9 @@ fun MoreHubScreen(
     onPlayStream: (title: String, stream: StreamSource, localPath: String?) -> Unit,
     onToggleAdultOptIn: (Boolean) -> Unit,
     onRunBdixProbe: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    compatibilityMatrix: CompatibilityMatrix? = null,
+    compatibilityError: String? = null
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // 1. Live TV Section (Strictly in More tab)
@@ -224,6 +227,9 @@ fun MoreHubScreen(
             }
             if (catalog.sources.isEmpty() && playbackProviders.isEmpty()) Text("Source bundle unavailable.", color = CinatorWarningYellow)
         }
+
+        Spacer(Modifier.height(14.dp))
+        CompatibilityPanel(compatibilityMatrix, compatibilityError)
 
         Spacer(Modifier.height(14.dp))
         ReferenceInspector(references, referencesError)

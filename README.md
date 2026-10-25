@@ -1,4 +1,8 @@
-# Cinator — v0.4 provider preview
+# Cinator — v0.5 policy and compatibility preview
+
+**Phase 1 remains incomplete.** This increment adds truthful engine-status reporting and validation-only admission policies, not Nuvio JavaScript or CloudStream DEX execution. No new Internet Archive, France24, Anime/K-Drama or external-provider playback is activated. See [outstanding gates](docs/phase1-blockers.md).
+
+More → Engine compatibility displays the generated matrix. The separate `plugin_review_ledger.json` accounts for 162 unreviewed descriptor occurrences with unknown licensing/digest/signer fields. Counts are inventory, not working-provider counts. Existing Blender capabilities below remain unchanged.
 
 Native Android Kotlin/Compose app with no login or multiple profiles and no required manual addon URL setup.
 
