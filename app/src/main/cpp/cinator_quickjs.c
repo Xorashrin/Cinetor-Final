@@ -12,6 +12,7 @@
 #define SOURCE_LIMIT 131072
 #define DOCUMENT_LIMIT 65536
 #define OUTPUT_LIMIT 262144
+#define JOB_LIMIT 1024U
 
 typedef struct { size_t used; int oom; int expired; int64_t deadline_ns; } Budget;
 typedef union { max_align_t alignment; struct { size_t size; } data; } Allocation;
@@ -138,7 +139,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_cinator_app_engines_nuvio_runtime_NativeQu
     jbyteArray result = NULL;
     JSRuntime *runtime = NULL;
     JSContext *context = NULL;
-    JSValue global = JS_UNDEFINED, evaluated = JS_UNDEFINED;
+    JSValue global = JS_UNDEFINED, source_value = JS_UNDEFINED, evaluated = JS_UNDEFINED;
     Budget budget = {0};
     if (!source_array || !document_array || !uuid_array || height < 144 || height > 2160 || timeout_ms < 50 || timeout_ms > 2000) {
         error = "INVALID_INPUT"; goto cleanup;
@@ -179,14 +180,54 @@ JNIEXPORT jbyteArray JNICALL Java_com_cinator_app_engines_nuvio_runtime_NativeQu
     if (JS_IsException(value)) goto js_error;
     if (JS_DefinePropertyValueStr(context, global, "__expectedUuid", value, 0) < 0) goto js_error;
     if (JS_DefinePropertyValueStr(context, global, "__preferredHeight", JS_NewInt32(context, height), 0) < 0) goto js_error;
-    evaluated = JS_Eval(context, source, (size_t)source_size, "reviewed-source", JS_EVAL_TYPE_GLOBAL);
-    if (JS_IsException(evaluated)) goto js_error;
-    JS_FreeValue(context, evaluated);
+    /* JS_Eval returns an owned value, even for source with a completion value.
+       Release it before invocation and reset so every cleanup path frees once. */
+    source_value = JS_Eval(context, source, (size_t)source_size, "reviewed-source", JS_EVAL_TYPE_GLOBAL);
+    if (JS_IsException(source_value)) goto js_error;
+    JS_FreeValue(context, source_value);
+    source_value = JS_UNDEFINED;
     static const char invocation[] = "module.exports.getStreams(__parentDocument, __expectedUuid, __preferredHeight)";
     evaluated = JS_Eval(context, invocation, sizeof(invocation) - 1, "reviewed-invocation", JS_EVAL_TYPE_GLOBAL);
     if (JS_IsException(evaluated)) goto js_error;
     if (interrupt(runtime, &budget)) { error = "TIMEOUT"; goto cleanup; }
     if (budget.oom) { error = "OUT_OF_MEMORY"; goto cleanup; }
+    /* PromiseState returns -1 for non-promises; never inspect/call a "then"
+       property. Synchronous results retain their original no-job-pump behavior.
+       All values, jobs and cleanup stay on this JNI call's sole owning thread. */
+    int promise_state = (int)JS_PromiseState(context, evaluated);
+    unsigned int jobs = 0;
+    while (promise_state == JS_PROMISE_PENDING) {
+        /* Check between jobs too: short jobs may never trigger the VM interrupt. */
+        if (interrupt(runtime, &budget)) { error = "TIMEOUT"; goto cleanup; }
+        if (budget.oom) { error = "OUT_OF_MEMORY"; goto cleanup; }
+        if (!JS_IsJobPending(runtime)) { error = "PENDING_PROMISE"; goto cleanup; }
+        if (jobs >= JOB_LIMIT) { error = "JOB_LIMIT"; goto cleanup; }
+        /* The job context is borrowed, not a new context to free. This runtime
+           has only our context; drain its exception without invoking JS text. */
+        JSContext *job_context = NULL;
+        int job_status = JS_ExecutePendingJob(runtime, &job_context);
+        jobs++;
+        if (job_status < 0 && job_context) {
+            JSValue exception = JS_GetException(job_context);
+            JS_FreeValue(job_context, exception);
+        }
+        if (interrupt(runtime, &budget)) { error = "TIMEOUT"; goto cleanup; }
+        if (budget.oom) { error = "OUT_OF_MEMORY"; goto cleanup; }
+        if (job_status < 0) goto js_error;
+        if (job_status == 0) { error = "PENDING_PROMISE"; goto cleanup; }
+        promise_state = (int)JS_PromiseState(context, evaluated);
+    }
+    if (promise_state == JS_PROMISE_REJECTED) {
+        /* Never read/stringify the rejection reason (including its getters). */
+        error = "ENGINE_ERROR"; goto cleanup;
+    }
+    if (promise_state == JS_PROMISE_FULFILLED) {
+        /* PromiseResult returns an owned duplicate, not a borrowed value.
+           Keep it alive before freeing the owned promise; cleanup frees it once. */
+        JSValue fulfillment = JS_PromiseResult(context, evaluated);
+        JS_FreeValue(context, evaluated);
+        evaluated = fulfillment;
+    }
     if (!JS_IsString(evaluated)) { error = "INVALID_RESULT"; goto cleanup; }
     size_t output_size = 0;
     output = JS_ToCStringLen(context, &output_size, evaluated);
@@ -204,6 +245,7 @@ cleanup:
     if (context) {
         if (output) JS_FreeCString(context, output);
         JS_FreeValue(context, evaluated);
+        JS_FreeValue(context, source_value);
         JS_FreeValue(context, global);
         /* Never stringify exception values: getters, messages and stack are untrusted. */
         JSValue exception = JS_GetException(context);

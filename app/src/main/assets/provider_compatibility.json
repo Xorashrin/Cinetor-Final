@@ -1492,7 +1492,7 @@
       "name": "IPTV-org — Public channel playlists",
       "reason": "M3U playlist protocol only; playlist CC0 metadata does not license broadcasts. No exact official-channel provenance plus Android playback proof reviewed; no channel E2E or recording claim.",
       "status": "SUPPORTED_PROTOCOL",
-      "version": "bundle:0.7.0"
+      "version": "bundle:0.8.0"
     },
     {
       "capability": {
@@ -1564,7 +1564,7 @@
       "name": "Cinemeta — Movies & Series metadata",
       "reason": "Implemented catalog/search adapter only; upstream metadata APIs do not imply an implemented details/episodes adapter. No video license, native playback or download.",
       "status": "SUPPORTED_PROTOCOL",
-      "version": "bundle:0.7.0"
+      "version": "bundle:0.8.0"
     },
     {
       "capability": {
@@ -1618,7 +1618,7 @@
       "name": "TVMaze — Anime metadata",
       "reason": "Implemented catalog/search adapter only; upstream metadata APIs do not imply an implemented details/episodes adapter. No video license, native playback or download.",
       "status": "SUPPORTED_PROTOCOL",
-      "version": "bundle:0.7.0"
+      "version": "bundle:0.8.0"
     },
     {
       "capability": {
@@ -1636,7 +1636,7 @@
       "name": "TVMaze — Series metadata",
       "reason": "Implemented catalog/search adapter only; upstream metadata APIs do not imply an implemented details/episodes adapter. No video license, native playback or download.",
       "status": "SUPPORTED_PROTOCOL",
-      "version": "bundle:0.7.0"
+      "version": "bundle:0.8.0"
     },
     {
       "capability": {
@@ -1654,7 +1654,7 @@
       "name": "TVMaze — Korean drama metadata",
       "reason": "Implemented catalog/search adapter only; upstream metadata APIs do not imply an implemented details/episodes adapter. No video license, native playback or download.",
       "status": "SUPPORTED_PROTOCOL",
-      "version": "bundle:0.7.0"
+      "version": "bundle:0.8.0"
     }
   ],
   "schemaVersion": 1

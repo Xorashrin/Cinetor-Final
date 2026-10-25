@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fixed-case containment probes exist only in debug builds; not a plugin endpoint. -->
+    <application>
+        <service
+            android:name=".engines.nuvio.runtime.NativeContainmentProbeService"
+            android:exported="false"
+            android:isolatedProcess="true"
+            android:process=":native_containment_probe"
+            android:stopWithTask="true" />
+    </application>
+</manifest>

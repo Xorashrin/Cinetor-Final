@@ -4,10 +4,10 @@ The original requested phase remains **incomplete**. Preparatory modules and sta
 
 ## Current deliverable boundary
 
-- Existing Blender Open Films provider remains active; v0.6 exact-commit Android one-film playback/download/file-only regression passed. It is not a replacement for the requested engines.
-- Full Nuvio plugin admission remains disabled. A separate source-pinned native QuickJS slice now executes one authored, digest-pinned Blender resolver in an unexported isolated service. API35/x86_64 live-metadata/UID/admission/rebind evidence passed in run 40236640366. Native host deadline/OOM/stack tests pass, but Android fault injection, file/socket denial and full host bindings remain unverified. Production native-result-to-playback wiring is a distinct gate.
-- New CloudStream policy validates descriptors and bounded embedded ZIP/digest metadata only. It does not class-load DEX, fetch plugin binaries or grant execution.
-- New Internet Archive adapter is independently implemented against public API shapes. No item is default-enabled: exact file transport, codec and Android playback proof are incomplete. Metadata/uploader license claims do not independently establish rights.
+- Existing Blender Open Films provider remains active; v0.7 commit44b8e1b passed native-linked Android one-film playback/download/file-only regression in run40241754652. It is not a replacement for the requested ecosystems.
+- Full Nuvio plugin admission remains disabled. A separate source-pinned native QuickJS slice now executes one authored, digest-pinned Blender resolver in an unexported isolated service. API35/x86_64 live-metadata/UID/admission/rebind evidence passed in run 40236640366. Native host deadline/OOM/stack tests pass, but Android fault injection, file/socket denial and full host bindings remain unverified. Production native-result-to-playback passed in v0.7. Debug-only Android containment probes and bounded Promise/job processing are the current implementation batch; their Android gate is pending.
+- CloudStream policy validates descriptors and bounded embedded ZIP/digest metadata only; no DEX execution is enabled. Parent replayed actual upstream MainAPI construction/catalog/movie-load/extractor-link factories with Kotlin2.4.0 and official dependency closure. Host Kotlin2.0.21 rejects current upstream metadata; unchanged current dependencies also require newer metadata support. A compatible-toolchain migration or audited backport is required before Android integration. Static JVM factories are not playback or .cs3 hosting.
+- New Internet Archive adapter is independently implemented against public API shapes. No item is default-enabled: the exact BigBuckBunny_328 / BigBuckBunny_512kb.mp4 complete43,315,070-byte file and H.264/AAC decode now pass host checks, while Android playback and complete-credit correspondence remain unverified. Metadata/uploader license claims do not independently establish rights.
 - New external-provider policy does not return native streams. No reviewed routes are activated. It cannot supply Anime/K-Drama raw-video playback or download.
 - Compatibility status and per-plugin ledger explicitly retain unknown license/signature/source/rights/E2E fields. Repository references are not a full ecosystem inventory.
 
@@ -15,12 +15,12 @@ The original requested phase remains **incomplete**. Preparatory modules and sta
 
 | Gate | Evidence still required |
 |---|---|
-| Actual Nuvio runtime | Beyond the v0.6 source-built fixed-script/service proof: production native-result-to-playback verification; Nuvio host APIs; network/credential boundaries; Android hard-failure recovery; specifically authorized ecosystem plugins; broader device compatibility/E2E tests. |
+| Actual Nuvio runtime | Beyond the v0.7 native-linked playback proof: Nuvio host APIs (Promise/HTTP continuation, invocation, settings/timers/URL/DOM/crypto); network/credential boundaries; Android hard-failure recovery; specifically authorized ecosystem plugins; broader device compatibility/E2E tests. |
 | Actual CloudStream compatibility | Reviewed/reproducibly rebuilt provider code or accepted restricted execution model; no assumption that PathClassLoader or isolated UID contains arbitrary DEX; license/media-rights clearance and explicit compatibility limits. |
 | Per-plugin coverage | Immutable plugin identities/versions/artifacts; source and publisher authorization; digest/signature/revocation; software-license/dependency notices; rights/territory/playback/download decisions; Android evidence and expiry/review dates. |
-| Anime/K-Drama | Real authorized direct playback or separately approved official embedded/external playback. No available universal no-key raw-stream API has been verified. Metadata remains metadata. |
+| Anime/K-Drama | Real authorized direct playback or separately approved official embedded/external playback. No available universal no-key raw-stream API has been verified. The user explicitly declined YouTube/WebView substitution and accepted retaining these integrations as blocked; availability must follow publisher-permitted countries. Metadata remains metadata. |
 | Internet Archive | Reachable exact media response, complete-file/codec validation and Android E2E after primary rights review. Current selected candidate is not activated. |
-| Official Live TV | Broadcaster-approved integration path plus exact Android playback evidence. France24 public HLS transport exists, but default bundling permission has not been established from retrieved evidence. |
+| Official Live TV | Broadcaster-approved integration path plus exact Android playback evidence. France Médias Monde legal notice requires prior written authorization for embedded players. DW permits official embedding conditionally, but the user declined YouTube/WebView substitution; direct-HLS redistribution permission and Android native E2E remain unestablished. |
 | User-hosted services | A known user-authorized Jellyfin/nginx server/library. No endpoint or credentials have been provided, and no fake default backend may be substituted. |
 
 ## Next valid decisions

@@ -98,6 +98,8 @@ jobs:
             adb install built-test/app-debug-androidTest.apk
             python3 scripts/run_provider_instrumentation.py provider-evidence
             python3 scripts/run_isolated_js_instrumentation.py isolated-js-evidence
+            python3 scripts/run_native_containment.py native-containment-evidence
+            python3 scripts/run_archive_instrumentation.py archive-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -106,4 +108,6 @@ jobs:
             smoke-evidence/
             provider-evidence/
             isolated-js-evidence/
+            native-containment-evidence/
+            archive-evidence/
           if-no-files-found: warn

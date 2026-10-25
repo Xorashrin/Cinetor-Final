@@ -14,8 +14,11 @@ add_dependencies(cinator_quickjs_host_classes cinator_quickjs)
 set(HOST_JAVA "${Java_JAVA_EXECUTABLE}" -Xcheck:jni
     "-Djava.library.path=$<TARGET_FILE_DIR:cinator_quickjs>" -cp "${HOST_CLASSES}"
     com.cinator.app.engines.nuvio.runtime.NativeQuickJsHostTest)
-foreach(CASE invalid arithmetic utf8 loop oom recursion sanitized result boundaries fresh capabilities)
+set(PROMISE_CASES promise_resolve promise_async promise_reject promise_pending promise_jobs
+    promise_result promise_oom promise_recursion promise_loop promise_sync)
+foreach(CASE invalid arithmetic utf8 loop oom recursion sanitized result boundaries fresh capabilities ${PROMISE_CASES})
     add_test(NAME "native_quickjs_${CASE}" COMMAND ${HOST_JAVA} "${CASE}")
+    set_tests_properties("native_quickjs_${CASE}" PROPERTIES TIMEOUT 5)
 endforeach()
 add_test(NAME native_quickjs_reviewed COMMAND ${HOST_JAVA} reviewed
     "${REPOSITORY_ROOT}/app/src/main/java/com/cinator/app/engines/nuvio/ReviewedEmbeddedScript.kt")

@@ -33,15 +33,40 @@ which requires the parent's device tests.
 * Inputs are copied without holding JVM pins during JS. Strict UTF-8; embedded NUL
   is allowed in document strings, but not executable source.
 * Three readonly global primitive properties pass data without interpolation.
-  A fixed getStreams invocation must return a JS string; promises are rejected,
-  and no asynchronous job queue is drained.
+  A fixed getStreams invocation returns a JS string or a native Promise fulfilling
+  to a string. Pending jobs run only while that Promise remains pending, on the
+  same JNI thread, with the original monotonic deadline, heap/stack limits and a
+  fixed 1024-job cap. The deadline and OOM latch are checked between jobs too.
+  A pending Promise with no jobs fails immediately; there is no callback wait.
+  Synchronous strings and settled Promises do not drain unrelated jobs. Arbitrary
+  thenables are invalid, without inspecting their properties.
 * No quickjs-libc, module loader, std/os/network/Java bindings, or raw diagnostics.
 * IllegalStateException message is only INVALID_INPUT, OUT_OF_MEMORY, TIMEOUT,
-  ENGINE_ERROR, INVALID_RESULT, or OUTPUT_LIMIT. Recursion/syntax/JS exceptions
-  share ENGINE_ERROR; native code never reads untrusted exception text.
+  ENGINE_ERROR, INVALID_RESULT, OUTPUT_LIMIT, PENDING_PROMISE or JOB_LIMIT.
+  Rejections/recursion/syntax/JS exceptions share ENGINE_ERROR; native code never
+  reads untrusted exception text. JS_PromiseResult returns an owned duplicate;
+  the Promise and its fulfillment are each released exactly once.
 * CMake checks the exact source commit/version and every vendored file hash.
   Upstream core uses GNU C11 for its `asm` Atomics instruction; the JNI bridge is
   strict C11 with -Wall/-Wextra/-Werror. Android library uses 16 KiB page link flags.
+
+## Bounded Promise regression verification
+
+The host suite now has 22 CTest cases, including Promise.resolve UTF-8 strings,
+async/await and chained fulfillment, sanitized rejection (hostile getters), pending
+with no jobs, self-requeue, exact 1024/1025-job boundaries, invalid fulfillment,
+output limits, OOM (including caught OOM), recursion, job timeout and fresh-runtime
+recovery. All load real JNI under `-Xcheck:jni`; each adversarial error is followed
+by a healthy arithmetic evaluation. Release and fatal UBSan builds passed 22/22.
+Evidence is under `/home/ASHRIN/.hermes/cache/scratch/phase1-promise-native/`:
+`red-resolve.log`, `red-jobs.log`, `green-release.log`, `green-ubsan.log`.
+Final ownership cleanup and leftover-job tests were re-run three times per case
+in each build (66/66 executions each): `green-release-repeat.log` and
+`green-ubsan-repeat.log`.
+
+This is bounded core Promise support, **not full Nuvio host compatibility**.
+No fetch, timers, network callbacks, public IPC or production source pins changed.
+This host run does not establish Android isolation/device behavior or leak freedom.
 
 ## Additional sanitizer finding (subagent run, superseded below)
 

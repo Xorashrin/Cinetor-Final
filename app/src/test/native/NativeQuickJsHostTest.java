@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-/** Calls the compiled production Kotlin object and the actual JNI engine. */
+/** Calls the actual production JNI engine via the Kotlin object ABI twin. */
 public class NativeQuickJsHostTest {
     private static final String ID = "d5382e6e-7c96-42bb-96e8-155fbe765d5a";
     private static final byte[] UUID = utf8(ID);
@@ -75,8 +75,63 @@ public class NativeQuickJsHostTest {
                 error("ENGINE_ERROR", "this is not valid syntax!!!", 100);
                 error("ENGINE_ERROR", "var module={exports:{}};", 100);
                 break;
+            case "promise_resolve":
+                equal("বাংলা 🎬", evaluate(script("return Promise.resolve('বাংলা 🎬');"), "{}", 720));
+                break;
+            case "promise_async":
+                equal("async:42", evaluate("var module={exports:{getStreams:async function(d,u,h){await Promise.resolve(); return 'async:'+await Promise.resolve('42');}}};", "{}", 720));
+                equal("chain", evaluate(script("return Promise.resolve().then(()=>Promise.resolve('chain'));"), "{}", 720));
+                break;
+            case "promise_reject":
+                error("ENGINE_ERROR", script("return Promise.reject(new Error('PRIVATE_DOCUMENT_MUST_NEVER_LEAK'));"), 500);
+                error("ENGINE_ERROR", script("return Promise.resolve().then(()=>{throw {get message(){while(true){}},toString(){while(true){}}};});"), 100);
+                break;
+            case "promise_pending":
+                long pendingStart = System.nanoTime();
+                for (int i=0;i<10;i++) error("PENDING_PROMISE", script("return new Promise(()=>{});"), 1000);
+                error("PENDING_PROMISE", script("return Promise.resolve().then(()=>new Promise(()=>{}));"), 1000);
+                if (System.nanoTime()-pendingStart > 2_000_000_000L) throw new AssertionError("Empty queue must not wait for a callback");
+                break;
+            case "promise_jobs":
+                long jobsStart = System.nanoTime();
+                error("JOB_LIMIT", script("return new Promise(()=>{function again(){Promise.resolve().then(again);} again();});"), 2000);
+                if (System.nanoTime()-jobsStart > 2_000_000_000L) throw new AssertionError("Job count was not bounded");
+                // Exactly 1024 jobs may settle; a 1025th must not execute.
+                equal("done", evaluate(script("return new Promise(resolve=>{var n=0; function next(){if(++n===1024)resolve('done');else Promise.resolve().then(next);} Promise.resolve().then(next);});"), "{}", 720));
+                error("JOB_LIMIT", script("return new Promise(resolve=>{var n=0; function next(){if(++n===1025)resolve('done');else Promise.resolve().then(next);} Promise.resolve().then(next);});"), 2000);
+                break;
+            case "promise_result":
+                for (String value : new String[]{"42", "({})", "undefined", "null"}) {
+                    error("INVALID_RESULT", script("return Promise.resolve("+value+");"), 500);
+                    error("INVALID_RESULT", script("return Promise.resolve().then(()=>"+value+");"), 500);
+                }
+                error("INVALID_RESULT", script("return {get then(){while(true){}}};"), 100);
+                equal("", evaluate(script("return Promise.resolve('');"), "{}", 720));
+                equal("x".repeat(262144), evaluate(script("return Promise.resolve().then(()=>'x'.repeat(262144));"), "{}", 720));
+                error("OUTPUT_LIMIT", script("return Promise.resolve().then(()=>'x'.repeat(262145));"), 500);
+                break;
+            case "promise_oom":
+                error("OUT_OF_MEMORY", script("return Promise.resolve().then(()=>new ArrayBuffer(32*1024*1024));"), 500);
+                error("OUT_OF_MEMORY", script("return Promise.resolve().then(()=>{try{new ArrayBuffer(32*1024*1024)}catch(e){} return 'ok';});"), 500);
+                break;
+            case "promise_recursion":
+                error("ENGINE_ERROR", script("return Promise.resolve().then(()=>{function recurse(){return recurse();}return recurse();});"), 500);
+                break;
+            case "promise_loop":
+                long promiseStart = System.nanoTime();
+                error("TIMEOUT", script("return Promise.resolve().then(()=>{while(true){}});"), 50);
+                // Many short jobs must share the original deadline, not renew it.
+                error("TIMEOUT", script("return new Promise(()=>{function again(){var end=Date.now()+5;while(Date.now()<end){} Promise.resolve().then(again);} Promise.resolve().then(again);});"), 50);
+                if (System.nanoTime()-promiseStart > 2_000_000_000L) throw new AssertionError("Promise deadline was not bounded");
+                break;
+            case "promise_sync":
+                // Synchronous strings still return without draining unrelated jobs.
+                equal("sync", evaluate(script("Promise.resolve().then(()=>{while(true){}}); return 'sync';"), "{}", 720));
+                equal("settled", evaluate(script("return new Promise(resolve=>{Promise.resolve().then(()=>{globalThis.previous=1;resolve('settled');Promise.resolve().then(()=>{while(true){}});});});"), "{}", 720));
+                for (int i=0;i<50;i++) equal("clean", evaluate(script("return Promise.resolve().then(()=>typeof previous==='undefined'?'clean':'dirty');"), "{}", 720));
+                break;
             case "result":
-                for (String result : new String[]{"42", "({})", "Promise.resolve('[]')"}) error("INVALID_RESULT", script("return " + result + ";"), 100);
+                for (String result : new String[]{"42", "({})"}) error("INVALID_RESULT", script("return " + result + ";"), 100);
                 equal("", evaluate(script("return '';"), "{}", 720));
                 equal("x".repeat(262144), evaluate(script("return 'x'.repeat(262144);"), "{}", 720));
                 error("OUTPUT_LIMIT", script("return 'x'.repeat(262145);"), 500);
