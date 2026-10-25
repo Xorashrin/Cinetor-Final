@@ -4,6 +4,8 @@
 
     <application
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@drawable/ic_cinator"
         android:label="Cinator"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinator"

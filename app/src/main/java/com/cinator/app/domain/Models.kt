@@ -55,8 +55,14 @@ data class StreamSource(
     val quality: String,
     val isDownloadable: Boolean,
     val providerId: String,
-    val subtitleLang: String? = null
+    val subtitleLang: String? = null,
+    val contentId: String? = null,
+    val section: FeedSection? = null,
+    val isLive: Boolean = false,
+    val headers: Map<String, String> = emptyMap()
 )
+
+enum class MediaKind { MOVIE, SERIES, VIDEO, ANIME, K_DRAMA, LIVE_TV, ADULT, UNKNOWN }
 
 data class MediaCard(
     val id: String,
@@ -70,7 +76,11 @@ data class MediaCard(
     val rating: String? = null,
     val genres: List<String> = emptyList(),
     val externalUrl: String? = null,
-    val streams: List<StreamSource> = emptyList()
+    val streams: List<StreamSource> = emptyList(),
+    val posterUrl: String? = null,
+    val backdropUrl: String? = null,
+    val kind: MediaKind = MediaKind.UNKNOWN,
+    val contentId: String? = null
 )
 
 enum class DownloadStatus {
@@ -121,11 +131,11 @@ object ProviderRegistry {
         // HOME (Movies & Series only)
         ProviderDescriptor(
             id = "open-cinema-mp4",
-            displayName = "Open Cinema & HLS Test Archive",
+            displayName = "MDN CC0 video sample",
             section = FeedSection.HOME,
             sourceClass = SourceClass.OPEN_MEDIA_STREAM,
             endpoint = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-            protocol = "HTTPS MP4 (HTTP 206 Byte-Range) & Apple fMP4 HLS",
+            protocol = "HTTPS MP4",
             capabilities = setOf(
                 ProviderCapability.SEARCH,
                 ProviderCapability.METADATA,
@@ -135,7 +145,7 @@ object ProviderRegistry {
             ),
             canPlayInApp = true,
             canDownload = true,
-            capabilityNote = "Verified CC0 MP4 & Apple fMP4 HLS streams supporting native ExoPlayer play, pause, 10s seek, and offline MP4 download."
+            capabilityNote = "MDN flower.mp4 CC0 sample, not a film/series resolver. Playback depends on network and device."
         ),
         ProviderDescriptor(
             id = "tvmaze-home",
@@ -199,24 +209,7 @@ object ProviderRegistry {
             canDownload = false,
             capabilityNote = "Live public anime metadata and search filtered strictly to Anime/Animation."
         ),
-        ProviderDescriptor(
-            id = "open-anime-stream",
-            displayName = "Open Animation Stream Fixture",
-            section = FeedSection.ANIME,
-            sourceClass = SourceClass.OPEN_MEDIA_STREAM,
-            endpoint = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8",
-            protocol = "HTTPS HLS + CC0 MP4",
-            capabilities = setOf(
-                ProviderCapability.SEARCH,
-                ProviderCapability.METADATA,
-                ProviderCapability.IN_APP_STREAM,
-                ProviderCapability.SEEK,
-                ProviderCapability.DOWNLOAD
-            ),
-            canPlayInApp = true,
-            canDownload = true,
-            capabilityNote = "Open-licensed animation stream for testing Anime feed playback, seek, and offline MP4 download."
-        ),
+
         ProviderDescriptor(
             id = "hianime-ref",
             displayName = "HiAnime / AniWatch (Guide Reference)",
@@ -267,24 +260,7 @@ object ProviderRegistry {
             canDownload = false,
             capabilityNote = "Live Korean & Asian drama metadata and search isolated to the K-Drama feed."
         ),
-        ProviderDescriptor(
-            id = "open-kdrama-preview",
-            displayName = "Open Drama Preview Stream",
-            section = FeedSection.KDRAMA,
-            sourceClass = SourceClass.OPEN_MEDIA_STREAM,
-            endpoint = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-            protocol = "HTTPS MP4 (HTTP 206)",
-            capabilities = setOf(
-                ProviderCapability.SEARCH,
-                ProviderCapability.METADATA,
-                ProviderCapability.IN_APP_STREAM,
-                ProviderCapability.SEEK,
-                ProviderCapability.DOWNLOAD
-            ),
-            canPlayInApp = true,
-            canDownload = true,
-            capabilityNote = "Open-licensed stream fixture for K-Drama feed player & downloader verification."
-        ),
+
         ProviderDescriptor(
             id = "dramacool-kisskh-ref",
             displayName = "DramaCool / KissKH / MyAsianTV (Reference)",
@@ -330,16 +306,16 @@ object ProviderRegistry {
 
         // ADULT (Strictly isolated inside More -> Adult Content, disabled by default)
         ProviderDescriptor(
-            id = "adult-self-hosted-manifest",
-            displayName = "Authorized Self-Hosted 18+ Addon Slot",
+            id = "adult-unavailable",
+            displayName = "Adult sources unavailable",
             section = FeedSection.ADULT,
             sourceClass = SourceClass.AUTHORIZED_ADDON_MANIFEST,
-            endpoint = "https://example.org/manifest.json",
+            endpoint = "",
             protocol = "Nuvio/Stremio JSON Manifest",
-            capabilities = setOf(ProviderCapability.MANIFEST_CONTRACT, ProviderCapability.SEARCH),
+            capabilities = emptySet(),
             canPlayInApp = false,
             canDownload = false,
-            capabilityNote = "Disabled by default. Requires explicit 18+ opt-in and user-supplied authorized manifest URL; completely isolated from Home, Anime, and K-Drama."
+            capabilityNote = "No adult provider bundled. Disabled by default; no network request or placeholder catalog."
         )
     )
 

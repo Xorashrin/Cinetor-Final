@@ -8,6 +8,7 @@ import com.cinator.app.data.SectionStateCoordinator
 import com.cinator.app.data.UrlPolicyValidator
 import com.cinator.app.domain.FeedSection
 import com.cinator.app.domain.MediaCard
+import com.cinator.app.domain.MediaKind
 import com.cinator.app.domain.ProviderRegistry
 import com.cinator.app.domain.SourceClass
 import com.cinator.app.domain.StreamProtocol
@@ -24,7 +25,7 @@ class CinatorContractsAndIsolationTest {
     fun providerRegistry_enforcesSectionBoundariesAndExternalLinkRules() {
         for (section in FeedSection.entries) {
             val providers = ProviderRegistry.forSection(section)
-            assertTrue("Expected providers for $section", providers.isNotEmpty())
+            if (section != FeedSection.ADULT) assertTrue("Expected providers for $section", providers.isNotEmpty())
             assertTrue(providers.all { it.section == section })
         }
 
@@ -54,7 +55,8 @@ class CinatorContractsAndIsolationTest {
             synopsis = "Test",
             section = FeedSection.ANIME,
             providerId = "tvmaze-anime",
-            providerName = "TVMaze"
+            providerName = "TVMaze",
+            kind = MediaKind.ANIME
         )
         val homeBefore = coordinator.getState(FeedSection.HOME).items
         coordinator.updateSectionItems(FeedSection.HOME, homeBefore + animeLeakAttempt)
@@ -69,9 +71,13 @@ class CinatorContractsAndIsolationTest {
         assertEquals(null, coordinator.getState(FeedSection.ANIME).errorMessage)
         assertEquals("Simulated timeout", coordinator.getState(FeedSection.KDRAMA).errorMessage)
 
-        // Opting into Adult populates isolated store; opting out wipes it
+        // Opt-in does not invent content or endpoints; actual data remains isolated.
         val adultOn = coordinator.setAdultOptIn(true)
-        assertTrue(adultOn.items.isNotEmpty())
+        assertTrue(adultOn.items.isEmpty())
+        coordinator.updateSectionItems(FeedSection.ADULT, listOf(animeLeakAttempt.copy(
+            id = "adult_test", section = FeedSection.ADULT, kind = MediaKind.ADULT
+        )))
+        assertEquals(1, coordinator.getState(FeedSection.ADULT).items.size)
         val adultOff = coordinator.setAdultOptIn(false)
         assertTrue(adultOff.items.isEmpty())
     }
@@ -141,7 +147,9 @@ class CinatorContractsAndIsolationTest {
             protocol = StreamProtocol.MP4,
             quality = "720p",
             isDownloadable = true,
-            providerId = "open-cinema-mp4"
+            providerId = "open-cinema-mp4",
+            contentId = "mdn:cc0:flower",
+            section = FeedSection.HOME
         )
         val hlsStream = StreamSource(
             id = "s2",

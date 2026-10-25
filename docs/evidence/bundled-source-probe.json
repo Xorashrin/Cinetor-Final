@@ -1,0 +1,118 @@
+{
+  "capturedAt": "2026-10-25T14:43:16.055719+00:00",
+  "scope": "bounded metadata/playlist requests; no stream playback tested",
+  "expectedEndpoints": 13,
+  "checkedEndpoints": 13,
+  "reachable": 13,
+  "results": [
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=anime",
+      "httpStatus": 200,
+      "bytes": 13387,
+      "sha256": "85a6014d49d807d217cd4454356f96d209b1fc9a5ea677bc81cd0b43f8c65814",
+      "records": 10,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=breaking%20bad",
+      "httpStatus": 200,
+      "bytes": 12224,
+      "sha256": "27b1257db8e69eabdbf7608b5f2651404112a9301c500c94e0db9e63dd195674",
+      "records": 8,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=goblin",
+      "httpStatus": 200,
+      "bytes": 13699,
+      "sha256": "1cc9387d37372df76c332509e5ef3efa0a2386e51df0bb413443f665dd8ff12f",
+      "records": 10,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=korean",
+      "httpStatus": 200,
+      "bytes": 14377,
+      "sha256": "1a7b20abf63e035b4d346929a016ebcb0593a59a5e3241ca3ce034027a084b70",
+      "records": 10,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=naruto",
+      "httpStatus": 200,
+      "bytes": 14969,
+      "sha256": "43d78041f2551f6d12c7a04e7990b7ca77c6431daa6ea4cb5a0bbbda3662962b",
+      "records": 10,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://api.tvmaze.com/search/shows?q=star",
+      "httpStatus": 200,
+      "bytes": 17030,
+      "sha256": "28e165a5d3fbc32b7c46b16dfa502a86208a0be9d00f96095545137fb5b24b93",
+      "records": 10,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      "httpStatus": 200,
+      "bytes": 1128375,
+      "sha256": "0cd83d944a6ca7822b4a8306cecc60a36e859b041f6702c6a1ad9ead78924451",
+      "mp4SignatureObserved": true,
+      "status": "sample_transport_reachable"
+    },
+    {
+      "url": "https://iptv-org.github.io/iptv/categories/animation.m3u",
+      "httpStatus": 200,
+      "bytes": 44524,
+      "sha256": "c430e08313906ae039e8fc66d1610fbe3aa049eeb94ff22ef8e56c21e478409c",
+      "declaredChannels": 175,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://iptv-org.github.io/iptv/categories/entertainment.m3u",
+      "httpStatus": 200,
+      "bytes": 211297,
+      "sha256": "b0f16d359949afa1541b18e90b8a26d677bcc54584212fb1d27fb0a2818b9a20",
+      "declaredChannels": 898,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://iptv-org.github.io/iptv/categories/music.m3u",
+      "httpStatus": 200,
+      "bytes": 165144,
+      "sha256": "63a5f77a2af3f5d753ccdd029ef94ff12af77bdc026fda199af9cd200eaf2596",
+      "declaredChannels": 790,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://iptv-org.github.io/iptv/categories/news.m3u",
+      "httpStatus": 200,
+      "bytes": 232941,
+      "sha256": "b6eef1e21eeeab5c0f0b551cfa71583524db67ea04bdc38a1add5a4489abf83a",
+      "declaredChannels": 1029,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://iptv-org.github.io/iptv/categories/sports.m3u",
+      "httpStatus": 200,
+      "bytes": 116260,
+      "sha256": "9816f2712b33ee0782554b322e6237eb33652e1860f63cd3e872f77b620fa6f1",
+      "declaredChannels": 466,
+      "status": "metadata_reachable"
+    },
+    {
+      "url": "https://v3-cinemeta.strem.io/manifest.json",
+      "httpStatus": 200,
+      "bytes": 6395,
+      "sha256": "85dc47fd0e3f8e2488dcc0804fdbfb7cb17f580ccedf968b85928d6552011b2b",
+      "manifestId": "com.linvo.cinemeta",
+      "resources": [
+        "catalog",
+        "meta",
+        "addon_catalog"
+      ],
+      "status": "metadata_reachable"
+    }
+  ]
+}

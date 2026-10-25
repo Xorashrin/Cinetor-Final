@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "bundleVersion": "0.3.0",
+  "directorySnapshotAsset": "embedded_directory_snapshot.json",
+  "sources": [
+    {
+      "id": "nuvio-cinemeta-home",
+      "name": "Cinemeta — Movies & Series metadata",
+      "section": "HOME",
+      "engine": "CINEMETA",
+      "endpoints": [
+        "https://v3-cinemeta.strem.io/manifest.json"
+      ],
+      "enabled": true,
+      "capabilityNote": "Stremio-compatible catalog/meta addon. Does not provide streams or downloads."
+    },
+    {
+      "id": "tvmaze-home",
+      "name": "TVMaze — Series metadata",
+      "section": "HOME",
+      "engine": "TVMAZE",
+      "endpoints": [
+        "https://api.tvmaze.com/search/shows?q=breaking%20bad",
+        "https://api.tvmaze.com/search/shows?q=star"
+      ],
+      "enabled": true,
+      "capabilityNote": "Public metadata only. Anime and Korean drama are excluded; no video streams."
+    },
+    {
+      "id": "tvmaze-anime",
+      "name": "TVMaze — Anime metadata",
+      "section": "ANIME",
+      "engine": "TVMAZE",
+      "endpoints": [
+        "https://api.tvmaze.com/search/shows?q=naruto",
+        "https://api.tvmaze.com/search/shows?q=anime"
+      ],
+      "enabled": true,
+      "capabilityNote": "Anime-tagged or Japanese animation metadata only. No bundled anime streaming resolver."
+    },
+    {
+      "id": "tvmaze-kdrama",
+      "name": "TVMaze — Korean drama metadata",
+      "section": "KDRAMA",
+      "engine": "TVMAZE",
+      "endpoints": [
+        "https://api.tvmaze.com/search/shows?q=korean",
+        "https://api.tvmaze.com/search/shows?q=goblin"
+      ],
+      "enabled": true,
+      "capabilityNote": "Korean scripted drama only. Animation and other-language dramas are excluded; metadata only."
+    },
+    {
+      "id": "iptv-org-public",
+      "name": "IPTV-org — Public channel playlists",
+      "section": "LIVETV",
+      "engine": "IPTV",
+      "endpoints": [
+        "https://iptv-org.github.io/iptv/categories/news.m3u",
+        "https://iptv-org.github.io/iptv/categories/entertainment.m3u",
+        "https://iptv-org.github.io/iptv/categories/sports.m3u",
+        "https://iptv-org.github.io/iptv/categories/music.m3u",
+        "https://iptv-org.github.io/iptv/categories/animation.m3u"
+      ],
+      "enabled": true,
+      "capabilityNote": "Public playlist descriptors. Individual channels may be offline or geo-restricted; availability is not guaranteed. Downloads disabled."
+    },
+    {
+      "id": "open-cinema-mp4",
+      "name": "MDN CC0 video sample",
+      "section": "HOME",
+      "engine": "OPEN_VIDEO",
+      "endpoints": [
+        "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+      ],
+      "enabled": true,
+      "capabilityNote": "A clearly labelled CC0 sample video for native playback/download. Not a movie/episode resolver or missing-title fallback."
+    }
+  ]
+}

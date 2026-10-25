@@ -3,6 +3,7 @@ package com.cinator.app.data
 import com.cinator.app.domain.BdixHostStatus
 import com.cinator.app.domain.FeedSection
 import com.cinator.app.domain.MediaCard
+import com.cinator.app.domain.MediaKind
 import com.cinator.app.domain.ProviderRegistry
 import com.cinator.app.domain.SectionStoreState
 import com.cinator.app.domain.StreamProtocol
@@ -17,20 +18,58 @@ import java.net.URL
 import java.net.URLEncoder
 
 object UrlPolicyValidator {
+    private val encodedControl = Regex("%(?:0[0-9a-f]|1[0-9a-f]|7f)", RegexOption.IGNORE_CASE)
+
+    /** Syntactic public-target policy only; never performs DNS resolution. */
     fun isSafeHttpsUrl(rawUrl: String): Boolean {
-        val trimmed = rawUrl.trim()
-        if (trimmed.isEmpty()) return false
+        if (rawUrl.isBlank() || rawUrl != rawUrl.trim() ||
+            rawUrl.any { it.isISOControl() } || encodedControl.containsMatchIn(rawUrl)) return false
         return try {
-            val uri = URI(trimmed)
-            val scheme = uri.scheme?.lowercase() ?: return false
-            val host = uri.host?.lowercase() ?: return false
-            if (scheme != "https") return false
-            if (uri.userInfo != null) return false
-            if (host == "localhost" || host.startsWith("127.") || host == "0.0.0.0") return false
-            true
+            val uri = URI(rawUrl)
+            val host = uri.host?.lowercase()?.trimEnd('.') ?: return false
+            if (!uri.scheme.equals("https", ignoreCase = true) || uri.userInfo != null ||
+                (uri.port != -1 && uri.port != 443)) return false
+            when {
+                host.startsWith("[") -> isPublicIpv6(host.removeSurrounding("[", "]"))
+                host.all { it.isDigit() || it == '.' } -> isPublicIpv4(host)
+                else -> {
+                    val labels = host.split('.')
+                    labels.size >= 2 && labels.all {
+                        it.length in 1..63 && it.first().isLetterOrDigit() &&
+                            it.last().isLetterOrDigit() && it.all { c -> c in 'a'..'z' || c.isDigit() || c == '-' }
+                    } && labels.last().any { it in 'a'..'z' } &&
+                        labels.last() !in setOf("localhost", "local", "internal", "lan", "home", "onion") &&
+                        !host.endsWith(".home.arpa")
+                }
+            }
         } catch (_: Exception) {
             false
         }
+    }
+
+    private fun isPublicIpv4(host: String): Boolean {
+        val parts = host.split('.')
+        if (parts.size != 4 || parts.any { it.isEmpty() || (it.length > 1 && it.startsWith('0')) }) return false
+        val octets = parts.map { it.toIntOrNull() ?: return false }
+        if (octets.any { it !in 0..255 }) return false
+        val (a, b, c) = octets
+        return !(a == 0 || a == 10 || a == 127 || a >= 224 ||
+            (a == 100 && b in 64..127) || (a == 169 && b == 254) ||
+            (a == 172 && b in 16..31) || (a == 192 && (b == 168 || b == 0 || (b == 88 && c == 99))) ||
+            (a == 198 && (b in 18..19 || (b == 51 && c == 100))) ||
+            (a == 203 && b == 0 && c == 113))
+    }
+
+    private fun isPublicIpv6(host: String): Boolean {
+        // URI has already checked literal syntax. Only global unicast is accepted;
+        // mapped IPv4, scope IDs, transition/tunnel and special ranges fail closed.
+        if (host.contains('%') || host.contains('.') || host.startsWith(':')) return false
+        val groups = host.split(':')
+        val first = groups.first().toIntOrNull(16) ?: return false
+        val second = groups.getOrNull(1)?.takeIf { it.isNotEmpty() }?.toIntOrNull(16) ?: 0
+        if (first !in 0x2000..0x3fff || first == 0x2002 || first == 0x3fff) return false
+        if (first == 0x2001 && (second < 0x0200 || second == 0x0db8)) return false
+        return true
     }
 
     fun isDeclaredBdixEndpoint(rawUrl: String): Boolean {
@@ -164,6 +203,15 @@ object CloudStreamRepoParser {
     }
 }
 
+/** Shared cache/state boundary; an unknown or relabeled kind is never approved. */
+internal fun MediaCard.belongsTo(section: FeedSection): Boolean = this.section == section && when (section) {
+    FeedSection.HOME -> kind in setOf(MediaKind.MOVIE, MediaKind.SERIES, MediaKind.VIDEO)
+    FeedSection.ANIME -> kind == MediaKind.ANIME
+    FeedSection.KDRAMA -> kind == MediaKind.K_DRAMA
+    FeedSection.LIVETV -> kind == MediaKind.LIVE_TV
+    FeedSection.ADULT -> kind == MediaKind.ADULT
+}
+
 class SectionStateCoordinator(
     adultInitiallyEnabled: Boolean = false
 ) {
@@ -177,11 +225,14 @@ class SectionStateCoordinator(
     }
 
     var isAdultEnabled: Boolean = adultInitiallyEnabled
+        @Synchronized get
         private set
 
+    @Synchronized
     fun getState(section: FeedSection): SectionStoreState =
         stores[section] ?: SectionStoreState(section = section)
 
+    @Synchronized
     fun setAdultOptIn(enabled: Boolean): SectionStoreState {
         isAdultEnabled = enabled
         val updated = if (enabled) {
@@ -203,6 +254,7 @@ class SectionStateCoordinator(
         return updated
     }
 
+    @Synchronized
     fun updateSectionItems(
         section: FeedSection,
         newItems: List<MediaCard>,
@@ -211,10 +263,12 @@ class SectionStateCoordinator(
         if (section == FeedSection.ADULT && !isAdultEnabled) {
             return getState(FeedSection.ADULT)
         }
-        val scoped = newItems.filter { it.section == section }.distinctBy { "${it.providerId}:${it.id}" }
+        val scoped = newItems.filter { it.belongsTo(section) }.distinctBy { it.providerId to it.id }
         val current = getState(section)
+        if (timestampMs < current.lastUpdatedMs) return current
         val next = current.copy(
             items = scoped,
+            searchResults = localMatches(scoped, current.searchQuery),
             isLoading = false,
             errorMessage = null,
             lastUpdatedMs = timestampMs
@@ -223,27 +277,23 @@ class SectionStateCoordinator(
         return next
     }
 
+    @Synchronized
     fun updateSearch(
         section: FeedSection,
         query: String,
-        remoteResults: List<MediaCard> = emptyList()
+        remoteResults: List<MediaCard> = LOCAL_QUERY_CHANGE
     ): SectionStoreState {
         if (section == FeedSection.ADULT && !isAdultEnabled) {
             return getState(FeedSection.ADULT)
         }
         val current = getState(section)
         val trimmed = query.trim()
-        val localMatches = if (trimmed.isEmpty()) {
-            emptyList()
-        } else {
-            current.items.filter {
-                it.title.contains(trimmed, ignoreCase = true) ||
-                    it.subtitle.contains(trimmed, ignoreCase = true) ||
-                    it.genres.any { g -> g.contains(trimmed, ignoreCase = true) }
-            }
-        }
-        val combined = (localMatches + remoteResults.filter { it.section == section })
-            .distinctBy { "${it.providerId}:${it.id}" }
+        // Two arguments start/change a query; an explicitly supplied list completes
+        // that query, including an empty provider response. Late completions are inert.
+        if (remoteResults !== LOCAL_QUERY_CHANGE && trimmed != current.searchQuery.trim()) return current
+        val combined = if (trimmed.isEmpty()) emptyList() else
+            (localMatches(current.items, trimmed) + remoteResults.filter { it.belongsTo(section) })
+                .distinctBy { it.providerId to it.id }
         val next = current.copy(
             searchQuery = query,
             searchResults = combined
@@ -252,179 +302,61 @@ class SectionStateCoordinator(
         return next
     }
 
+    private fun localMatches(items: List<MediaCard>, query: String): List<MediaCard> {
+        val trimmed = query.trim()
+        if (trimmed.isEmpty()) return emptyList()
+        return items.filter {
+            it.title.contains(trimmed, ignoreCase = true) ||
+                it.subtitle.contains(trimmed, ignoreCase = true) ||
+                it.genres.any { genre -> genre.contains(trimmed, ignoreCase = true) }
+        }
+    }
+
+    @Synchronized
     fun recordSectionError(section: FeedSection, error: String): SectionStoreState {
         val current = getState(section)
+        if (section == FeedSection.ADULT && !isAdultEnabled) return current
         val next = current.copy(isLoading = false, errorMessage = error)
         stores[section] = next
         return next
     }
 
     companion object {
+        private val LOCAL_QUERY_CHANGE = object : AbstractList<MediaCard>() {
+            override val size: Int = 0
+            override fun get(index: Int): MediaCard = throw IndexOutOfBoundsException(index.toString())
+        }
         private const val CC0_MP4_URL =
             "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-        private const val APPLE_BIPBOP_HLS_URL =
-            "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
 
         fun defaultCuratedItems(section: FeedSection): List<MediaCard> = when (section) {
             FeedSection.HOME -> listOf(
                 MediaCard(
-                    id = "home_open_flower_mp4",
-                    title = "Bloom in Motion (Open CC0 Cinema Fixture)",
-                    subtitle = "Open Cinema • Direct MP4 (Play/Pause/Seek/Download)",
-                    synopsis = "Verified CC0 MP4 video stream supporting HTTP 206 byte-range seeking and local offline MP4 download.",
+                    id = "mdn_cc0_flower",
+                    title = "Flower (MDN CC0 sample)",
+                    subtitle = "Public CC0 demonstration video • not a movie or episode",
+                    synopsis = "The Flower video from MDN's interactive examples. This is a playback sample, not a catalog title.",
                     section = FeedSection.HOME,
-                    providerId = "open-cinema-mp4",
-                    providerName = "Open Cinema & HLS Test Archive",
-                    year = "2024",
-                    rating = "8.6",
-                    genres = listOf("Documentary", "Short"),
+                    providerId = "mdn-cc0-sample",
+                    providerName = "MDN CC0 video sample",
+                    kind = MediaKind.VIDEO,
+                    contentId = "mdn:cc0:flower",
                     streams = listOf(
                         StreamSource(
-                            id = "stream_home_mp4",
-                            label = "Direct MP4 (CC0 • Downloadable)",
+                            id = "mdn_cc0_flower_mp4",
+                            label = "CC0 sample MP4",
                             url = CC0_MP4_URL,
                             protocol = StreamProtocol.MP4,
-                            quality = "720p",
+                            quality = "",
                             isDownloadable = true,
-                            providerId = "open-cinema-mp4",
-                            subtitleLang = "English"
-                        ),
-                        StreamSource(
-                            id = "stream_home_hls",
-                            label = "Adaptive fMP4 HLS Stream",
-                            url = APPLE_BIPBOP_HLS_URL,
-                            protocol = StreamProtocol.HLS_M3U8,
-                            quality = "1080p Auto",
-                            isDownloadable = false,
-                            providerId = "open-cinema-mp4",
-                            subtitleLang = "English CC"
-                        )
-                    )
-                ),
-                MediaCard(
-                    id = "home_hls_multirate",
-                    title = "Signal Horizon (Adaptive HLS Test Feature)",
-                    subtitle = "Apple fMP4 Master Playlist • Multi-bitrate HLS",
-                    synopsis = "Exercises ExoPlayer adaptive HLS streaming, keyframe seeking, and playback speed controls.",
-                    section = FeedSection.HOME,
-                    providerId = "open-cinema-mp4",
-                    providerName = "Open Cinema & HLS Test Archive",
-                    year = "2025",
-                    rating = "8.9",
-                    genres = listOf("Sci-Fi", "Feature"),
-                    streams = listOf(
-                        StreamSource(
-                            id = "stream_signal_hls",
-                            label = "Master HLS (.m3u8)",
-                            url = APPLE_BIPBOP_HLS_URL,
-                            protocol = StreamProtocol.HLS_M3U8,
-                            quality = "Adaptive HLS",
-                            isDownloadable = false,
-                            providerId = "open-cinema-mp4"
+                            providerId = "mdn-cc0-sample",
+                            contentId = "mdn:cc0:flower",
+                            section = FeedSection.HOME
                         )
                     )
                 )
             )
-
-            FeedSection.ANIME -> listOf(
-                MediaCard(
-                    id = "anime_open_fixture",
-                    title = "Chronicle of Aether (Open Anime Stream Fixture)",
-                    subtitle = "Sub / Dub Ready • Isolated Anime Feed",
-                    synopsis = "Open-licensed animation stream verifying isolated Anime feed playback, 10-second seek, and offline MP4 download.",
-                    section = FeedSection.ANIME,
-                    providerId = "open-anime-stream",
-                    providerName = "Open Animation Stream Fixture",
-                    year = "2025",
-                    rating = "9.1",
-                    genres = listOf("Anime", "Action", "Fantasy"),
-                    streams = listOf(
-                        StreamSource(
-                            id = "stream_anime_hls",
-                            label = "Anime HLS Stream (Sub)",
-                            url = APPLE_BIPBOP_HLS_URL,
-                            protocol = StreamProtocol.HLS_M3U8,
-                            quality = "1080p HLS",
-                            isDownloadable = false,
-                            providerId = "open-anime-stream",
-                            subtitleLang = "Japanese / English Sub"
-                        ),
-                        StreamSource(
-                            id = "stream_anime_mp4",
-                            label = "Direct Episode MP4 (Downloadable)",
-                            url = CC0_MP4_URL,
-                            protocol = StreamProtocol.MP4,
-                            quality = "720p MP4",
-                            isDownloadable = true,
-                            providerId = "open-anime-stream"
-                        )
-                    )
-                )
-            )
-
-            FeedSection.KDRAMA -> listOf(
-                MediaCard(
-                    id = "kdrama_open_fixture",
-                    title = "Seoul Midnight Letters (Open Drama Fixture)",
-                    subtitle = "Korean Drama • Isolated K-Drama Feed",
-                    synopsis = "Isolated K-Drama feed entry paired with an open-licensed preview stream for player and offline download verification.",
-                    section = FeedSection.KDRAMA,
-                    providerId = "open-kdrama-preview",
-                    providerName = "Open Drama Preview Stream",
-                    year = "2025",
-                    rating = "8.8",
-                    genres = listOf("K-Drama", "Romance", "Mystery"),
-                    streams = listOf(
-                        StreamSource(
-                            id = "stream_kdrama_mp4",
-                            label = "Preview Episode MP4 (Downloadable)",
-                            url = CC0_MP4_URL,
-                            protocol = StreamProtocol.MP4,
-                            quality = "720p MP4",
-                            isDownloadable = true,
-                            providerId = "open-kdrama-preview",
-                            subtitleLang = "English / Korean"
-                        )
-                    )
-                )
-            )
-
-            FeedSection.LIVETV -> listOf(
-                MediaCard(
-                    id = "livetv_bipbop_live",
-                    title = "Cinator Test Broadcast HD",
-                    subtitle = "Live TV • HLS .m3u8 Channel",
-                    synopsis = "Verified HTTPS HLS stream for Live TV channel switching and low-latency ExoPlayer playback. Download is disabled on live streams.",
-                    section = FeedSection.LIVETV,
-                    providerId = "iptv-org-public",
-                    providerName = "IPTV-org Public M3U Channels",
-                    genres = listOf("Live TV", "Broadcast"),
-                    streams = listOf(
-                        StreamSource(
-                            id = "stream_live_1",
-                            label = "Live HLS Channel (.m3u8)",
-                            url = APPLE_BIPBOP_HLS_URL,
-                            protocol = StreamProtocol.HLS_M3U8,
-                            quality = "Live HLS",
-                            isDownloadable = false,
-                            providerId = "iptv-org-public"
-                        )
-                    )
-                )
-            )
-
-            FeedSection.ADULT -> listOf(
-                MediaCard(
-                    id = "adult_authorized_slot",
-                    title = "Self-Hosted 18+ Addon Slot (No Default Content)",
-                    subtitle = "Isolated 18+ Store • Opt-In Only",
-                    synopsis = "This section is isolated from Home, Anime, and K-Drama. Configure an authorized self-hosted manifest URL in Settings to load adult catalog metadata.",
-                    section = FeedSection.ADULT,
-                    providerId = "adult-self-hosted-manifest",
-                    providerName = "Authorized Self-Hosted 18+ Addon Slot",
-                    genres = listOf("18+ Isolated")
-                )
-            )
+            else -> emptyList()
         }
     }
 }
@@ -463,6 +395,7 @@ object LiveNetworkAdapters {
     }
 
     fun parseTvMazeSearchJson(rawJson: String, section: FeedSection): List<MediaCard> {
+        if (section !in setOf(FeedSection.HOME, FeedSection.ANIME, FeedSection.KDRAMA)) return emptyList()
         val arr = JSONArray(rawJson)
         val results = mutableListOf<MediaCard>()
         val providerId = when (section) {
@@ -478,13 +411,30 @@ object LiveNetworkAdapters {
             if (id <= 0) continue
             val name = show.optString("name", "").trim()
             if (name.isEmpty()) continue
-            val language = show.optString("language", "English")
-            val type = show.optString("type", "Series")
+            val language = show.optString("language", "")
+            val type = show.optString("type", "")
             val premiered = show.optString("premiered", "").take(4).ifEmpty { null }
             val ratingObj = show.optJSONObject("rating")
             val avgRating = ratingObj?.optDouble("average")?.takeIf { !it.isNaN() && it > 0.0 }?.toString()
             val genresArr = show.optJSONArray("genres") ?: JSONArray()
             val genres = (0 until genresArr.length()).mapNotNull { genresArr.optString(it).takeIf { g -> g.isNotBlank() } }
+            val isAnime = genres.any { it.equals("Anime", ignoreCase = true) } ||
+                (type.equals("Animation", ignoreCase = true) && language.equals("Japanese", ignoreCase = true))
+            val isKDrama = !isAnime && language.equals("Korean", ignoreCase = true) &&
+                type.equals("Scripted", ignoreCase = true) && genres.any { it.equals("Drama", ignoreCase = true) }
+            val kind = when {
+                isAnime -> MediaKind.ANIME
+                isKDrama -> MediaKind.K_DRAMA
+                type.lowercase() in setOf("scripted", "animation", "reality", "documentary", "talk show", "game show", "news", "sports", "variety", "panel show", "award show") -> MediaKind.SERIES
+                else -> MediaKind.UNKNOWN
+            }
+            val matchesSection = when (section) {
+                FeedSection.ANIME -> kind == MediaKind.ANIME
+                FeedSection.KDRAMA -> kind == MediaKind.K_DRAMA
+                FeedSection.HOME -> kind == MediaKind.SERIES
+                else -> false
+            }
+            if (!matchesSection) continue
             val rawSummary = show.optString("summary", "")
                 .replace(Regex("<[^>]*>"), "")
                 .trim()
@@ -504,6 +454,8 @@ object LiveNetworkAdapters {
                     year = premiered,
                     rating = avgRating,
                     genres = genres,
+                    kind = kind,
+                    contentId = "tvmaze:$id",
                     externalUrl = officialUrl,
                     streams = emptyList()
                 )

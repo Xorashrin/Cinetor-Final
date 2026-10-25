@@ -1,0 +1,3351 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-25T10:51:06.208554+00:00",
+  "coverage": "Bounded supplied directory snapshot, not every extension in either ecosystem. References only.",
+  "rawRows": 94,
+  "uniqueEntries": 79,
+  "counts": {
+    "nuvio": 11,
+    "cloudstream": 68
+  },
+  "nuvioSubpluginDescriptors": 162,
+  "unresolvedEndpoints": 11,
+  "adultLinksOmitted": 2,
+  "entries": [
+    {
+      "id": "nuvio:repo:e67312c0a1119f926fc6",
+      "ecosystem": "nuvio",
+      "name": "Yoru",
+      "endpoint": "https://raw.githubusercontent.com/yoruix/nuvio-providers/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Yoru"
+      ],
+      "subplugins": [
+        {
+          "name": "4KHDHub",
+          "description": "4KHDHub direct links",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=4khdhub.fans&sz=128"
+        },
+        {
+          "name": "AnimeKai",
+          "description": "AnimeKai TV episodes via AnimeKai servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://animekai.to/assets/uploads/37585a39fe8c8d8fafaa2c7bfbf5374ecac859ea6a0288a6da2c61f5.png"
+        },
+        {
+          "name": "AnimePahe",
+          "description": "AnimePahe (Sub/Dub)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=animepahe.ru&sz=128"
+        },
+        {
+          "name": "UHDMovies",
+          "description": "UHD Movies streaming with multiple resolution",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=uhdmovies.ink&sz=128"
+        },
+        {
+          "name": "MoviesMod",
+          "description": "Movie and TV show streams from MoviesMod with multiple quality options",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=moviesmod.day&sz=128"
+        },
+        {
+          "name": "DahmerMovies",
+          "description": "Dahmer Movies streaming service. Use if needed.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://image.similarpng.com/file/similarpng/very-thumbnail/2021/05/Letter-D-logo-design-template-with-geometric-shape-style-on-transparent-background-PNG.png"
+        },
+        {
+          "name": "NetMirror",
+          "description": "Streaming links from netmirror. (No iOS support)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://net22.cc/favicon.ico"
+        },
+        {
+          "name": "StreamFlix",
+          "description": "Direct links via StreamFlix API",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hin"
+          ],
+          "icon": "https://streamflix.app/assets/images/logo-text-148x72.png"
+        },
+        {
+          "name": "MovieBox",
+          "description": "MovieBox streaming with multiple language support",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hin",
+            "tam",
+            "tel"
+          ],
+          "icon": "https://moviebox.ph/favicon.ico"
+        },
+        {
+          "name": "Vixsrc",
+          "description": "Vixsrc M3U8 streaming with auto quality",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://vixsrc.to/favicon.ico"
+        },
+        {
+          "name": "DVDPlay",
+          "description": "DVDPlay direct download links",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "mal",
+            "tam",
+            "hin"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=dvdplay.com&sz=128"
+        },
+        {
+          "name": "YFlix",
+          "description": "YFlix streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://yflix.to/assets/uploads/2f505f3de3c99889c1a72557f3e3714fc0c457b0.png"
+        },
+        {
+          "name": "VIDEASY",
+          "description": "VideoEasy streaming with multiple servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "de",
+            "it",
+            "fr",
+            "hi",
+            "es",
+            "pt"
+          ],
+          "icon": "https://www.videasy.net/logo.png"
+        },
+        {
+          "name": "MalluMV",
+          "description": "MalluMV direct links for South Indian movies",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "ta",
+            "te",
+            "hi",
+            "ml",
+            "kn"
+          ],
+          "icon": "https://mallumv.life/favicon.ico"
+        },
+        {
+          "name": "Vidlink",
+          "description": "Vidlink streaming with encrypted TMDB ID",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://vidlink.pro/favicon.ico"
+        },
+        {
+          "name": "Vidnest",
+          "description": "Vidnest streaming with encrypted AES-GCM",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://vidnest.fun/favicon.ico"
+        },
+        {
+          "name": "VidnestAnime",
+          "description": "Vidnest anime streaming with mappings",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ja"
+          ],
+          "icon": "https://vidnest.fun/favicon.ico"
+        },
+        {
+          "name": "Cinevibe",
+          "description": "Cinevibe (Movies)",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=cinevibe.online&sz=128"
+        },
+        {
+          "name": "CinemaCity",
+          "description": "CinemaCity (Multi-Language)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te",
+            "id",
+            "pl",
+            "ar"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=cinema-city.pl&sz=128"
+        },
+        {
+          "name": "Castle",
+          "description": "Multi Lang provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te",
+            "ml",
+            "kn"
+          ],
+          "icon": "https://static.hbayy.com/simple-blog-13/prod/_nuxt/big-logo.DESZ4mBj.png"
+        },
+        {
+          "name": "ShowBox",
+          "description": "ShowBox streaming with multiple quality",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://raw.githubusercontent.com/tapframe/nuvio-providers/main/Assets/Logo-2.png"
+        },
+        {
+          "name": "HDHub4u",
+          "description": "Direct links from HDHub4u",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hin"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=hdhub4u.me.uk&sz=128"
+        },
+        {
+          "name": "AllMovieLand",
+          "description": "AllMovieLand with multi-language support",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=allmovieland.cc&sz=128"
+        },
+        {
+          "name": "DooFlix",
+          "description": "Fast streaming with direct TMDB integration",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=dooflix.org&sz=128"
+        },
+        {
+          "name": "MovieBlast",
+          "description": "Direct links via MovieBlast API with multi-language support",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "te",
+            "hi",
+            "en"
+          ],
+          "icon": "https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/Icons/movieblast.png"
+        },
+        {
+          "name": "MyCima",
+          "description": "Arabic streaming provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ar"
+          ],
+          "icon": "https://www.google.com/s2/favicons?domain=wecima.show&sz=128"
+        }
+      ],
+      "snapshotId": "1b3b442df3b374d91e6b00e4"
+    },
+    {
+      "id": "nuvio:repo:569020f85c9475b0a573",
+      "ecosystem": "nuvio",
+      "name": "D3adlyRocket",
+      "endpoint": "https://raw.githubusercontent.com/D3adlyRocket/All-in-One-Nuvio/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "D3adlyRocket"
+      ],
+      "subplugins": [
+        {
+          "name": "HiAnime",
+          "description": "HiAnime - Anime and Asian content streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/Icons/hianime.png"
+        },
+        {
+          "name": "4KHDHub",
+          "description": "4KHDHub direct links",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/DZpW6Xfb/4khdhub.png"
+        },
+        {
+          "name": "AllWish",
+          "description": "All-Wish TV episodes via All-Wish servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "ja"
+          ],
+          "icon": "https://i.postimg.cc/WpFW45WQ/allwish.png"
+        },
+        {
+          "name": "AnimeKai",
+          "description": "AnimeKai TV episodes via AnimeKai servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/MKJd7fy7/animekai.png"
+        },
+        {
+          "name": "AnimePahe",
+          "description": "Watch anime online free in HD with fast streaming servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "ja"
+          ],
+          "icon": "https://i.postimg.cc/c4ZBGNNs/animepahe.png"
+        },
+        {
+          "name": "AnimeSalt",
+          "description": "AnimeSalt India",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "hi",
+            "en",
+            "ja"
+          ],
+          "icon": "https://i.postimg.cc/1X24MYhg/animesalt.png"
+        },
+        {
+          "name": "AnimeWorld",
+          "description": "Watch AnimeWorld India",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "hi",
+            "en",
+            "ja"
+          ],
+          "icon": "https://i.postimg.cc/wxD6rVKX/animeworld.png"
+        },
+        {
+          "name": "Anime-Sama",
+          "description": "Watch AnimeSama France",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://i.postimg.cc/tgYt2pYG/animesama.png"
+        },
+        {
+          "name": "AllMovieLand",
+          "description": "AllMovieLand streaming provider with multi-language support",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te"
+          ],
+          "icon": "https://i.postimg.cc/hhWqkVQs/allmovieland.png"
+        },
+        {
+          "name": "BrazucaPlay",
+          "description": "Brazuca Play - Movies & Series in English & Portuguese",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "pt"
+          ],
+          "icon": "https://i.postimg.cc/9F6zdnyb/brazucaplay.png"
+        },
+        {
+          "name": "Castle",
+          "description": "Multi Lang provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/0NvGzFyK/castle.png"
+        },
+        {
+          "name": "CinemaCity",
+          "description": "Multi Language Provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ar"
+          ],
+          "icon": "https://i.postimg.cc/XYjKhS3b/cinemacity.png"
+        },
+        {
+          "name": "CineStream",
+          "description": "Multi Language Provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/0NhjWWqT/cinestream.png"
+        },
+        {
+          "name": "Dahmermovies",
+          "description": "Auto-generated description for Dahmermovies",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/hGt3dV6Z/dhamermovies.png"
+        },
+        {
+          "name": "DiziYou",
+          "description": "Movies & Series in English & Turkish",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "tr"
+          ],
+          "icon": "https://i.postimg.cc/K8nYLrL3/diziyou.png"
+        },
+        {
+          "name": "DooFlix",
+          "description": "Fast streaming provider with direct TMDB integration",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "es"
+          ],
+          "icon": "https://i.postimg.cc/59H1DmRk/dooflix.png"
+        },
+        {
+          "name": "Embed69",
+          "description": "Movies & Series in English & Spanish",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "es"
+          ],
+          "icon": "https://i.postimg.cc/SK9YMsHG/embed69.png"
+        },
+        {
+          "name": "FlixIndia",
+          "description": "Streaming provider for FlixIndia",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/4xSPpSbb/onepieceskull.png"
+        },
+        {
+          "name": "HDHub4u",
+          "description": "Direct links from HDHub4u with high-speed download",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/mryRTf0R/hdhub4u.png"
+        },
+        {
+          "name": "HindMoviez",
+          "description": "HindMoviez - Hindi & English Movies and Series",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/5t55Csm4/hindmoviez.png"
+        },
+        {
+          "name": "HDMovie2",
+          "description": "Bollywood & Hindi Dubbed Movies",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "hi",
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/bJnfnzHS/hdmovie2.png"
+        },
+        {
+          "name": "Isaidub",
+          "description": "Tamil Dubbed Movies",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "ta"
+          ],
+          "icon": "https://i.postimg.cc/0jMv4cQH/isaidub.png"
+        },
+        {
+          "name": "LA.Movie",
+          "description": "Streams in Eng/Lat/Spa from LaMovie",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "es"
+          ],
+          "icon": "https://i.postimg.cc/SsgH2gcK/lamovie.png"
+        },
+        {
+          "name": "MovieBox",
+          "description": "MovieBox - Hindi, Tamil, Telugu & English Movies/Series",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te"
+          ],
+          "icon": "https://i.postimg.cc/TPwkfqHh/moviebox.png"
+        },
+        {
+          "name": "MovieBlast",
+          "description": "MovieBlast - Hindi, Tamil, Telugu & English Movies/Series",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta",
+            "te"
+          ],
+          "icon": "https://i.postimg.cc/qqkLSyhN/movieblast.png"
+        },
+        {
+          "name": "MoviesDrive",
+          "description": "Movies and TV shows with multiple streaming servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/bwDbhq9q/moviesdrive.png"
+        },
+        {
+          "name": "MoviesMod",
+          "description": "Movie and TV show streams with multiple quality options",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/YqWDJtWW/moviesmod.png"
+        },
+        {
+          "name": "Movies4u",
+          "description": "Auto-generated description for Movies4u",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ta"
+          ],
+          "icon": "https://i.postimg.cc/J0QG1QhQ/movies4u.jpg"
+        },
+        {
+          "name": "Movix VF",
+          "description": "Movies and TV series in English & French",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "icon": "https://i.postimg.cc/XYrPQm87/movix.png"
+        },
+        {
+          "name": "Nakios",
+          "description": "Mainly French, Some English & 4K Quality",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "fr",
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/nLwY1pJB/nakios.png"
+        },
+        {
+          "name": "Netmirror",
+          "description": "Streaming links from Netmirror (Netflix, Prime, Disney etc)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/L64M3bYV/netmirror.png"
+        },
+        {
+          "name": "Purstream",
+          "description": "Films and series in French (VF/VOSTFR/MULTI)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "fr"
+          ],
+          "icon": "https://i.postimg.cc/7L5shxmC/purstream.png"
+        },
+        {
+          "name": "RGShows",
+          "description": "Discover and stream your favorite Movies, TV Shows & Anime",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/kXNS9837/rgshows.png"
+        },
+        {
+          "name": "ShowBox",
+          "description": "ShowBox streaming with multiple quality versions",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/8c5XGzsx/showbox.png"
+        },
+        {
+          "name": "Streamflix",
+          "description": "Direct links via StreamFlix in Hindi",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/4yVjQjpH/streamflix.png"
+        },
+        {
+          "name": "Streamflix-En",
+          "description": "Direct links via StreamFlix in English",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/4yVjQjpH/streamflix.png"
+        },
+        {
+          "name": "UHDMovies",
+          "description": "UHD Movies streaming with multiple resolution",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/KzDBBdbK/uhdmovies.png"
+        },
+        {
+          "name": "Vidlink",
+          "description": "Vidlink streaming with encrypted TMDB ID",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/wMHSw2Vb/vidlink.png"
+        },
+        {
+          "name": "Videasy",
+          "description": "Videasy streaming with encrypted TMDB ID",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/7LHYMtVV/videasy.png"
+        },
+        {
+          "name": "Vixsrc",
+          "description": "Auto-generated description for Vixsrc",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.postimg.cc/tJP8zc5K/vixsrc.png"
+        },
+        {
+          "name": "OnlyKDrama",
+          "description": "Asian Drama",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ko"
+          ],
+          "icon": "https://i.postimg.cc/dtX84Gqc/onlykdrama.jpg"
+        },
+        {
+          "name": "Kisskh",
+          "description": "Asian Drama & Anime streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ko",
+            "ch",
+            "ja",
+            "th"
+          ],
+          "icon": "https://i.postimg.cc/2yLnTzPP/kisskh.jpg"
+        },
+        {
+          "name": "DramaFull",
+          "description": "Specializes in Asian dramas",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "ko",
+            "zh",
+            "ja"
+          ],
+          "icon": "https://dramafull.cc/favicon.ico"
+        },
+        {
+          "name": "XDMovies",
+          "description": "Premium streaming with multiple quality options and servers",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/4xSPpSbb/onepieceskull.png"
+        },
+        {
+          "name": "TwoEmbed",
+          "description": "Alternative streaming provider with multiple sources",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://i.postimg.cc/4xSPpSbb/onepieceskull.png"
+        }
+      ],
+      "snapshotId": "d153d8ded05cf780f32d1d58"
+    },
+    {
+      "id": "nuvio:repo:e321966cd21e949ce82b",
+      "ecosystem": "nuvio",
+      "name": "Phisher",
+      "endpoint": "https://raw.githubusercontent.com/phisher98/phisher-nuvio-providers/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Phisher"
+      ],
+      "subplugins": [
+        {
+          "name": "MoviesDrive",
+          "description": "MoviesDrive streaming with multiple quality options and versions",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://i.imgur.com/9bGkGMi.png"
+        },
+        {
+          "name": "HiAnime",
+          "description": "HiAnime Anime Streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/Icons/hianime.png"
+        },
+        {
+          "name": "XDMovies",
+          "description": "XDMovies Multi-Lang Movies/TVSeries Streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "hi"
+          ],
+          "icon": "https://xdmovies.site/assets/logo1.png"
+        }
+      ],
+      "snapshotId": "36eb559a98dc3180f110cbe8"
+    },
+    {
+      "id": "nuvio:repo:1e45fb271336bd89190b",
+      "ecosystem": "nuvio",
+      "name": "Michat88",
+      "endpoint": "https://raw.githubusercontent.com/michat88/nuvio-providers/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Michat88"
+      ],
+      "subplugins": [
+        {
+          "name": "Kisskh",
+          "description": "Asian Drama & Anime streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "id"
+          ],
+          "icon": "https://kisskh.ovh/favicon.ico"
+        },
+        {
+          "name": "4khdhub",
+          "description": "Auto-generated description for 4khdhub",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Animekai",
+          "description": "Auto-generated description for Animekai",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Castle",
+          "description": "Auto-generated description for Castle",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Cinevibe",
+          "description": "Auto-generated description for Cinevibe",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Dahmermovies",
+          "description": "Auto-generated description for Dahmermovies",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Dvdplay",
+          "description": "Auto-generated description for Dvdplay",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Hdhub4u",
+          "description": "Auto-generated description for Hdhub4u",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Hdrezka",
+          "description": "Auto-generated description for Hdrezka",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Idlix",
+          "description": "Auto-generated description for Idlix",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Mallumv",
+          "description": "Auto-generated description for Mallumv",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Mapple",
+          "description": "Auto-generated description for Mapple",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Moviebox",
+          "description": "Auto-generated description for Moviebox",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Moviesmod",
+          "description": "Auto-generated description for Moviesmod",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Myflixer-extractor",
+          "description": "Auto-generated description for Myflixer-extractor",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Netmirror",
+          "description": "Auto-generated description for Netmirror",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Showbox",
+          "description": "Auto-generated description for Showbox",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Streamflix",
+          "description": "Auto-generated description for Streamflix",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Uhdmovies",
+          "description": "Auto-generated description for Uhdmovies",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Videasy",
+          "description": "Auto-generated description for Videasy",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vidlink",
+          "description": "Auto-generated description for Vidlink",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vidnest-anime",
+          "description": "Auto-generated description for Vidnest-anime",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vidnest",
+          "description": "Auto-generated description for Vidnest",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vidrock",
+          "description": "Auto-generated description for Vidrock",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vidsrc",
+          "description": "Auto-generated description for Vidsrc",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Vixsrc",
+          "description": "Auto-generated description for Vixsrc",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Watch32",
+          "description": "Auto-generated description for Watch32",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Xprime",
+          "description": "Auto-generated description for Xprime",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Yflix",
+          "description": "Auto-generated description for Yflix",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        },
+        {
+          "name": "Adimoviebox",
+          "description": "Auto-generated description for Adimoviebox",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ]
+        }
+      ],
+      "snapshotId": "8bd7e7926e80932ab3bce92e"
+    },
+    {
+      "id": "nuvio:repo:a262d02b5898cee7f0f9",
+      "ecosystem": "nuvio",
+      "name": "Spidey",
+      "endpoint": "https://raw.githubusercontent.com/Abinanthankv/NuvioRepo/refs/heads/master/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Spidey"
+      ],
+      "subplugins": [
+        {
+          "name": "TamilMV",
+          "description": "TamilMV provider for Nuvio.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "ta",
+            "en"
+          ],
+          "icon": "https://www.1tamilmv.band/uploads/monthly_2025_02/logo.png.bcc33561bc1d7345f7c6237a80238992.png"
+        },
+        {
+          "name": "Tamilblasters",
+          "description": "Tamilblasters provider for Nuvio.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ta",
+            "en"
+          ],
+          "icon": "https://1tamilblasters.bz/uploads/monthly_2025_10/169356039_TBLwhitelogo.png.50e3c98229dab88b167074a68df15caf.png"
+        },
+        {
+          "name": "Tamilian",
+          "description": "Tamilian provider for Nuvio.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "ta",
+            "en"
+          ]
+        },
+        {
+          "name": "Moviesda",
+          "description": "Moviesda provider for Nuvio.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "ta",
+            "en"
+          ]
+        },
+        {
+          "name": "Movies4u",
+          "description": "Movies4u provider for Nuvio.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "en",
+            "ta",
+            "hi"
+          ]
+        },
+        {
+          "name": "Isaidub",
+          "description": "Isaidub provider for Nuvio",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ta",
+            "en"
+          ]
+        },
+        {
+          "name": "ToonHub",
+          "description": "ToonHub provider for Nuvio (Animes & Cartoons)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "hi",
+            "en"
+          ],
+          "icon": "https://toonhub4u.co/wp-content/uploads/2024/02/Untitled.png"
+        },
+        {
+          "name": "Animelok",
+          "description": "Animelok provider for Nuvio (Anime in multiple languages)",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "hi",
+            "ta",
+            "te",
+            "ml",
+            "en",
+            "ja"
+          ],
+          "icon": "https://animelok.to/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.5c53cc50.png&w=384&q=75"
+        },
+        {
+          "name": "XDmovies",
+          "description": "XDmovies provider for Nuvio (Movies and TV Shows)",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi"
+          ],
+          "icon": "https://xdmovies.site/assets/logo1.png"
+        },
+        {
+          "name": "DramaFull",
+          "description": "DramaFull provider for Nuvio. Specializes in Asian dramas.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "ko",
+            "zh",
+            "ja"
+          ],
+          "icon": "https://dramafull.cc/favicon.ico"
+        }
+      ],
+      "snapshotId": "a6ca29233a3a3aa9a44f2bcb"
+    },
+    {
+      "id": "nuvio:repo:0ea181d88f30e4bba5c2",
+      "ecosystem": "nuvio",
+      "name": "Nvmindl",
+      "endpoint": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Nvmindl"
+      ],
+      "subplugins": [
+        {
+          "name": "FaselHD",
+          "description": "Arabic movies and TV shows with direct HLS streaming",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ar",
+            "en",
+            "ja"
+          ],
+          "icon": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/main/Assets/faselhdx.png"
+        },
+        {
+          "name": "Kirmzi",
+          "description": "Turkish drama series with Arabic subtitles from Kirmzi",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "ar",
+            "tr"
+          ],
+          "icon": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/main/Assets/kirmzi.png"
+        },
+        {
+          "name": "WitAnime",
+          "description": "Arabic dubbed and subtitled anime from witanime.life",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ar",
+            "ja"
+          ],
+          "icon": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/main/Assets/witanime.png"
+        },
+        {
+          "name": "AnimeCloud",
+          "description": "Arabic dubbed and subtitled anime — direct MP4 streams from AnimeCloud API",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "ar",
+            "ja"
+          ],
+          "icon": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/main/Assets/animecloud.png"
+        },
+        {
+          "name": "Cineby",
+          "description": "Multi-server movie and TV streaming — 4K/1080p/720p with multilingual subtitles",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "ar"
+          ],
+          "icon": "https://raw.githubusercontent.com/nvmindl/nuvio-providers/main/Assets/cineby.png"
+        }
+      ],
+      "snapshotId": "6d5a2c24067fa338dad8fd53"
+    },
+    {
+      "id": "nuvio:repo:33e6df71210e1b96e578",
+      "ecosystem": "nuvio",
+      "name": "Saimuelbr",
+      "endpoint": "https://raw.githubusercontent.com/saimuelbr/saimuel-nuvio-repo/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Saimuelbr"
+      ],
+      "subplugins": [
+        {
+          "name": "Fembed",
+          "description": "Fembed API - Filmes, Séries e Animes em Português.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "pt"
+          ],
+          "icon": "https://fembed.sx/assets/favicon.png"
+        },
+        {
+          "name": "FSHD",
+          "description": "FSHD - Séries em 1080p (Português).",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "pt"
+          ],
+          "icon": "https://fshd.link/favicon.ico"
+        }
+      ],
+      "snapshotId": "c400208a988157d4b0ce288c"
+    },
+    {
+      "id": "nuvio:repo:4a6dd54df3c3357fc976",
+      "ecosystem": "nuvio",
+      "name": "Easystreams",
+      "endpoint": "https://raw.githubusercontent.com/realbestia1/nuvio-providers-it/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Easystreams"
+      ],
+      "subplugins": [
+        {
+          "name": "Guardoserie",
+          "description": "Movies and Series from Guardoserie",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "GuardaHD",
+          "description": "Movies from GuardaHD",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "Guardaserie",
+          "description": "TV Series from Guardaserie",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "AnimeUnity",
+          "description": "Anime from AnimeUnity",
+          "types": [
+            "tv",
+            "anime",
+            "movie"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "AnimeWorld",
+          "description": "Anime from AnimeWorld",
+          "types": [
+            "tv",
+            "anime",
+            "movie"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "AnimeSaturn",
+          "description": "Anime from AnimeSaturn",
+          "types": [
+            "tv",
+            "anime",
+            "movie"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "StreamingCommunity",
+          "description": "Movies and Series from StreamingCommunity",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "it"
+          ]
+        },
+        {
+          "name": "CinemaCity",
+          "description": "Movies and Series from CinemaCity",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "it"
+          ]
+        }
+      ],
+      "snapshotId": "dec46c221a141f7812b32cd2"
+    },
+    {
+      "id": "nuvio:repo:d4a796559ee98cf51546",
+      "ecosystem": "nuvio",
+      "name": "Gowaru",
+      "endpoint": "https://raw.githubusercontent.com/Gowaru/gowaru-nuvio-providers/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "Gowaru"
+      ],
+      "subplugins": [
+        {
+          "name": "Anime-Sama",
+          "description": "Un des plus gros catalogues français, très actif, sorties du jour.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://raw.githubusercontent.com/Anime-Sama/IMG/img/autres/logo.png"
+        },
+        {
+          "name": "VoirAnime",
+          "description": "Un des plus gros catalogues français d'animes.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://lh3.googleusercontent.com/728eE_dzDC7HWN9Cs2eGkQg4Vlk1CqCJj3T8aAQs50srttRUl6pVmmD0O4t1Zxn4fdiVpPzcoPAzNS2EuUre29Dulw=s60"
+        },
+        {
+          "name": "Vostfree",
+          "description": "Animes VF et VOSTFR en streaming et téléchargement.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://vostfree.ws/templates/Animix/images/logo.png"
+        },
+        {
+          "name": "FRAnime",
+          "description": "Regarder des animes VF et VOSTFR gratuitement sur FRAnime.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://franime.fr/logo.png"
+        },
+        {
+          "name": "French-Anime",
+          "description": "Animes VF et VOSTFR en streaming gratuit sur French Anime.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://french-anime.com/templates/franime/images/favicon3.png"
+        },
+        {
+          "name": "AnimeVOSTFR",
+          "description": "Animes VF et VOSTFR en streaming gratuit on AnimeVOSTFR.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://animevostfr.org/wp-content/uploads/luffy-icon.jpg"
+        },
+        {
+          "name": "AnimesUltra",
+          "description": "Animes en streaming VOSTFR et VF.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://animesultra.org/templates/animeultra/images/favicon.ico"
+        },
+        {
+          "name": "JetAnimes",
+          "description": "Regarder vos animes en streaming sur JetAnimes.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://vww.jetanimes.com/wp-content/uploads/2018/12/android-chrome-192x192.png"
+        },
+        {
+          "name": "Sekai",
+          "description": "Fournisseur spécialisé sur les gros animes. Streams directs très rapides sans iFrames.",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "fr"
+          ],
+          "icon": "https://sekai.one/favicon.ico"
+        }
+      ],
+      "snapshotId": "c2f1640fec780f510a83415c"
+    },
+    {
+      "id": "nuvio:repo:d89cb0afc1b80d906a41",
+      "ecosystem": "nuvio",
+      "name": "MoonCrown",
+      "endpoint": "https://raw.githubusercontent.com/mooncrown04/nuviotr/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "MoonCrown"
+      ],
+      "subplugins": [
+        {
+          "name": "MoonVidmodyFilmDizi",
+          "description": "En yeni filmleri güvenli ve hızlı şekilde sunar.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "tr",
+            "en"
+          ]
+        },
+        {
+          "name": "MoOnCrOwNFilmM3U",
+          "description": "PowerBoard, Zerk ve Lundeor kaynaklarından en yeni filmler.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "MoOnCrOwNDiziM3U",
+          "description": "PowerBoard, Zerk kaynaklarından en yeni diziler.",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "M3u",
+          "description": "M3u Film, Dizi İzleme",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "MoOnCrOwN M3U",
+          "description": "Otomatik M3U Katalog ve Yayın Eklentisi",
+          "types": [
+            "tv",
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://play-lh.googleusercontent.com/brwGNmr7IjA_MKk_TTPs0va10hdKE_bD_a1lnKoiMuCayW98EHpRv55edA6aEoJlmwfX=w240-h480"
+        },
+        {
+          "name": "NetMirror",
+          "description": "Streaming links from netmirror (No iOS support).",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://net22.cc/favicon.ico"
+        },
+        {
+          "name": "SinemaCx",
+          "description": "Film, Dizi İzleme Uygulaması",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "DiziYou",
+          "description": "En kaliteli Türkçe dublaj ve altyazılı yabancı dizi izleme sitesidir.",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "FullHdFilmizlesene",
+          "description": "Türkçe film, dizi ve anime - 5000+ HD içerik archive.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "SineWix",
+          "description": "Türkçe film, dizi ve anime - 5000+ HD içerik archive.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://play-lh.googleusercontent.com/brwGNmr7IjA_MKk_TTPs0va10hdKE_bD_a1lnKoiMuCayW98EHpRv55edA6aEoJlmwfX=w240-h480"
+        },
+        {
+          "name": "Rec",
+          "description": "En yeni dizileri güvenli ve hızlı şekilde sunar.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://rectvapp.com.tr/wp-content/uploads/2024/08/cropped-cropped-Screenshot_2023-08-31_at_11.02.55_PM-removebg-preview-32x32.webp"
+        },
+        {
+          "name": "JetFilmizle",
+          "description": "Türkçe dublaj full HD filmler. Pixeldrain mp4 stream sağlar.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://jetfilmizle.net/public/icons/apple-touch-icon.png"
+        },
+        {
+          "name": "SezonlukDizi",
+          "description": "Türkçe dublaj ve altyazılı diziler.",
+          "types": [
+            "tv"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "WebteIzle",
+          "description": "Türkçe dublaj ve altyazılı filmler. VidMoly/Sibnet stream sağlar.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://webteizle3.xyz/images/logo.png"
+        },
+        {
+          "name": "FilmModu",
+          "description": "Türkçe dublaj ve altyazılı full HD filmler.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ],
+          "icon": "https://filmmodu.rip/wp-content/uploads/2023/07/logo.png"
+        },
+        {
+          "name": "AltiYuzAltmisAltiFilm",
+          "description": "Türkçe Dublaj ve Altyazılı Film izle",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "tr"
+          ]
+        },
+        {
+          "name": "CinemaCity",
+          "description": "Multi Language Provider",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en",
+            "hi",
+            "ar",
+            "tr"
+          ],
+          "icon": "https://i.postimg.cc/XYjKhS3b/cinemacity.png"
+        },
+        {
+          "name": "Vidlink",
+          "description": "Vidlink streaming with encrypted TMDB ID",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "en"
+          ],
+          "icon": "https://vidlink.pro/favicon.ico"
+        }
+      ],
+      "snapshotId": "2b7d5e2bad1b43380f1368b8"
+    },
+    {
+      "id": "nuvio:repo:a7d5e11129f532be5780",
+      "ecosystem": "nuvio",
+      "name": "KennethJYS",
+      "endpoint": "https://raw.githubusercontent.com/KennethJYS/Nuvio-Providers-Latino/refs/heads/main/manifest.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://nuvioplugin.com/"
+      ],
+      "aliases": [
+        "KennethJYS"
+      ],
+      "subplugins": [
+        {
+          "name": "LaMovie",
+          "description": "Streams en Latino/Español desde LaMovie. Vimeos, GoodStream, etc.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "es"
+          ]
+        },
+        {
+          "name": "CineCalidad",
+          "description": "Películas en Latino desde CineCalidad.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "es"
+          ]
+        },
+        {
+          "name": "Embed69",
+          "description": "Streams en Latino/Español/Subtitulado desde Embed69.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "es"
+          ]
+        },
+        {
+          "name": "Zoowomaniacos",
+          "description": "Películas de culto, cine de autor y difíciles de encontrar.",
+          "types": [
+            "movie"
+          ],
+          "languages": [
+            "es"
+          ]
+        },
+        {
+          "name": "Xupalace",
+          "description": "Streams en Latino desde Xupalace.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "es"
+          ]
+        },
+        {
+          "name": "SeriesMetro",
+          "description": "Streams en Latino desde SeriesMetro.",
+          "types": [
+            "movie",
+            "tv"
+          ],
+          "languages": [
+            "es"
+          ]
+        }
+      ],
+      "snapshotId": "43e6d326783bdc36fe5d0591"
+    },
+    {
+      "id": "cloudstream:repo:867ef258e534230c6fec",
+      "ecosystem": "cloudstream",
+      "name": "CloudStream Providers Repository",
+      "endpoint": "https://raw.githubusercontent.com/recloudstream/extensions/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CloudStream Providers Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "19cff749ed7b5c4bfad97119"
+    },
+    {
+      "id": "cloudstream:repo:ea4f0ec71b2e56dbb28f",
+      "ecosystem": "cloudstream",
+      "name": "Mega",
+      "endpoint": "https://raw.githubusercontent.com/self-similarity/MegaRepo/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Mega"
+      ],
+      "subplugins": [],
+      "snapshotId": "8148068e0f2d9696d10de875"
+    },
+    {
+      "id": "cloudstream:repo:13bdaa6da817d61bfef3",
+      "ecosystem": "cloudstream",
+      "name": "Phisher Repo",
+      "endpoint": "https://raw.githubusercontent.com/phisher98/cloudstream-extensions-phisher/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Phisher Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "a5418d86bd44950a98c9301e"
+    },
+    {
+      "id": "cloudstream:repo:79bd6575dc9c9cbaeb9f",
+      "ecosystem": "cloudstream",
+      "name": "CSX / Megix Repo",
+      "endpoint": "https://raw.githubusercontent.com/SaurabhKaperwan/CSX/builds/CS.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CSX / Megix Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "298a1944fd0f0c6f1b9a2b8d"
+    },
+    {
+      "id": "cloudstream:repo:d35fde049ce11bc528fc",
+      "ecosystem": "cloudstream",
+      "name": "3rabi عربي",
+      "endpoint": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "3rabi عربي"
+      ],
+      "subplugins": [],
+      "snapshotId": "52bcb46fe82381c6d20596f1"
+    },
+    {
+      "id": "cloudstream:repo:6138bb26116980cad55e",
+      "ecosystem": "cloudstream",
+      "name": "Turkish Providers Repository",
+      "endpoint": "https://raw.githubusercontent.com/keyiflerolsun/Kekik-cloudstream/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Turkish Providers Repository",
+        "Turkish"
+      ],
+      "subplugins": [],
+      "snapshotId": "09f184d34280ba1c5f4eea22"
+    },
+    {
+      "id": "cloudstream:repo:70826dd0b5ef55205d6a",
+      "ecosystem": "cloudstream",
+      "name": "IndoStream Repo",
+      "endpoint": "https://raw.githubusercontent.com/TeKuma25/IndoStream/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "IndoStream Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "820f5e1619e565ca8e70a874"
+    },
+    {
+      "id": "cloudstream:repo:46dda395c876275b946d",
+      "ecosystem": "cloudstream",
+      "name": "doGior’s Had Enough",
+      "endpoint": "https://raw.githubusercontent.com/doGior/doGiorsHadEnough/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "doGior’s Had Enough"
+      ],
+      "subplugins": [],
+      "snapshotId": "1232226a6c17ee2127e09c3a"
+    },
+    {
+      "id": "cloudstream:repo:aec5a4f5acb4873ab9a8",
+      "ecosystem": "cloudstream",
+      "name": "CakeTwix",
+      "endpoint": "https://codeberg.org/CakesTwix/cloudstream-extensions-uk/raw/branch/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CakeTwix"
+      ],
+      "subplugins": [],
+      "snapshotId": "faaef6421ad4f01e4a6e8577"
+    },
+    {
+      "id": "cloudstream:repo:349e9a17439e7deae3d9",
+      "ecosystem": "cloudstream",
+      "name": "Italian Providers Repository",
+      "endpoint": "https://raw.githubusercontent.com/Gian-Fr/ItalianProvider/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Italian Providers Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "e6715ede29f6770cf534d709"
+    },
+    {
+      "id": "cloudstream:repo:369318c5de057efd2c02",
+      "ecosystem": "cloudstream",
+      "name": "Redowan’s BDIX",
+      "endpoint": "https://raw.githubusercontent.com/redowan99/Redowan-CloudStream/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Redowan’s BDIX"
+      ],
+      "subplugins": [],
+      "snapshotId": "720c909afcec852699d99b1d"
+    },
+    {
+      "id": "cloudstream:repo:b128c2d67a308bf88f34",
+      "ecosystem": "cloudstream",
+      "name": "Reflex Repo",
+      "endpoint": "https://raw.githubusercontent.com/Reflex755/ReflexRepo/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Reflex Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "77ee88fb7695e237f855798d"
+    },
+    {
+      "id": "cloudstream:repo:58780689b45c044664b2",
+      "ecosystem": "cloudstream",
+      "name": "Turkish Providers Repo",
+      "endpoint": "https://raw.githubusercontent.com/Kraptor123/cs-kraptor/refs/heads/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Turkish Providers Repo",
+        "Kraptor’un CloudStream Reposu"
+      ],
+      "subplugins": [],
+      "snapshotId": "fd343a3c70b248e8517212ca"
+    },
+    {
+      "id": "cloudstream:repo:85ce6d793a3faca279bd",
+      "ecosystem": "cloudstream",
+      "name": "Luna712",
+      "endpoint": "https://raw.githubusercontent.com/Luna712/Luna712-CloudStream-Extensions/28885d17ceb7f24782b732b6056085c14c1fd027/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Luna712"
+      ],
+      "subplugins": [],
+      "snapshotId": "2e755575013f7a1bbcc93ccd"
+    },
+    {
+      "id": "cloudstream:repo:00686ae0aeee69928445",
+      "ecosystem": "cloudstream",
+      "name": "CuxPlug",
+      "endpoint": "https://raw.githubusercontent.com/ycngmn/CuxPlug/refs/heads/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CuxPlug"
+      ],
+      "subplugins": [],
+      "snapshotId": "6c47fdeaa6cc4c64f99587b3"
+    },
+    {
+      "id": "cloudstream:repo:d273542e317dcb2384db",
+      "ecosystem": "cloudstream",
+      "name": "Saimuel Repo",
+      "endpoint": "https://raw.githubusercontent.com/saimuelbr/saimuelrepo/refs/heads/main/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Saimuel Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "d05feac48fcf2a7ea0b5c544"
+    },
+    {
+      "id": "cloudstream:repo:5aec01ad1617b826d2a5",
+      "ecosystem": "cloudstream",
+      "name": "sarapcanagii",
+      "endpoint": "https://raw.githubusercontent.com/sarapcanagii/Pitipitii/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "sarapcanagii"
+      ],
+      "subplugins": [],
+      "snapshotId": "fde81ae684c0bf1c1e128d1e"
+    },
+    {
+      "id": "cloudstream:repo:6b32e967d93b794636db",
+      "ecosystem": "cloudstream",
+      "name": "lawlietrepo",
+      "endpoint": "https://raw.githubusercontent.com/lawlietbr/lietrepo/refs/heads/main/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "lawlietrepo"
+      ],
+      "subplugins": [],
+      "snapshotId": "1340c1760d3801bbb83ca17d"
+    },
+    {
+      "id": "cloudstream:repo:fff3e147b53e50096df9",
+      "ecosystem": "cloudstream",
+      "name": "King",
+      "endpoint": "https://pastebin.com/raw/Cd2g2tfz",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "King"
+      ],
+      "subplugins": [],
+      "snapshotId": "64840af023b7c7f1b8fae7d7"
+    },
+    {
+      "id": "cloudstream:repo:e3c3b3d36697e37c734d",
+      "ecosystem": "cloudstream",
+      "name": "Arabico",
+      "endpoint": "https://raw.githubusercontent.com/aymanbest/Arabico/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Arabico"
+      ],
+      "subplugins": [],
+      "snapshotId": "05486ea3269210d9e1b1078e"
+    },
+    {
+      "id": "cloudstream:repo:6b3609a93ba164a10005",
+      "ecosystem": "cloudstream",
+      "name": "Aniyomi Compat",
+      "endpoint": "https://raw.githubusercontent.com/CranberrySoup/AniyomiCompatExtension/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Aniyomi Compat"
+      ],
+      "subplugins": [],
+      "snapshotId": "8b40fe3bd849e747e3aaf720"
+    },
+    {
+      "id": "cloudstream:repo:5cfbc9ac8f1cf3b13384",
+      "ecosystem": "cloudstream",
+      "name": "CloudX Repository",
+      "endpoint": "https://raw.githubusercontent.com/Asm0d3usX/CloudX/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CloudX Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "3bdcba9f7592f6308cf9c5b6"
+    },
+    {
+      "id": "cloudstream:repo:b2ceb12b6cf1fbeab6dc",
+      "ecosystem": "cloudstream",
+      "name": "DieGon Repository",
+      "endpoint": "https://pastebin.com/raw/qndZtL6D",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "DieGon Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "f63899a8926d75609c09c411"
+    },
+    {
+      "id": "cloudstream:repo:7a6278496404097f32e5",
+      "ecosystem": "cloudstream",
+      "name": "cs-karma",
+      "endpoint": "https://raw.githubusercontent.com/Kraptor123/cs-Karma/refs/heads/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "cs-karma"
+      ],
+      "subplugins": [],
+      "snapshotId": "b1ea91897054523894e56f13"
+    },
+    {
+      "id": "cloudstream:repo:6547d9671e5292d471cd",
+      "ecosystem": "cloudstream",
+      "name": "Netmirror Repo",
+      "endpoint": "https://raw.githubusercontent.com/Sushan64/NetMirror-Extension/refs/heads/builds/Netflix.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Netmirror Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "8c347ade37a84b2f4b751b44"
+    },
+    {
+      "id": "cloudstream:repo:a62a18603c9f27df5d35",
+      "ecosystem": "cloudstream",
+      "name": "German Providers Repository",
+      "endpoint": "https://raw.githubusercontent.com/Bnyro/GermanProviders/refs/heads/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "German Providers Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "68c7942701e969427cbc6503"
+    },
+    {
+      "id": "cloudstream:repo:0a434134f00cf26f15ed",
+      "ecosystem": "cloudstream",
+      "name": "zzikozz",
+      "endpoint": "https://raw.githubusercontent.com/zzikozz/frenchCS/refs/heads/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "zzikozz"
+      ],
+      "subplugins": [],
+      "snapshotId": "57fa27571016f32f3ba35896"
+    },
+    {
+      "id": "cloudstream:repo:f1c1ceea307c8a834459",
+      "ecosystem": "cloudstream",
+      "name": "GramFlix",
+      "endpoint": "https://raw.githubusercontent.com/tOntOnbOuLii/GramFlix/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "GramFlix"
+      ],
+      "subplugins": [],
+      "snapshotId": "592590c4923c6b5e37f51667"
+    },
+    {
+      "id": "cloudstream:repo:7ceaee4caa2c9b13171e",
+      "ecosystem": "cloudstream",
+      "name": "Cinephile",
+      "endpoint": "https://raw.githubusercontent.com/rockhero1234/cinephile/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Cinephile"
+      ],
+      "subplugins": [],
+      "snapshotId": "add11732b91b56eb5e2a7421"
+    },
+    {
+      "id": "cloudstream:repo:ecd3f67a1d6f06da203d",
+      "ecosystem": "cloudstream",
+      "name": "Cartoony Repo",
+      "endpoint": "https://raw.githubusercontent.com/med1245/cartoonyrepo/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Cartoony Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "dcf75fd1e24251a4efd343b1"
+    },
+    {
+      "id": "cloudstream:repo:89dc2ee4906c845e3f87",
+      "ecosystem": "cloudstream",
+      "name": "Storm-ext Fork",
+      "endpoint": "https://raw.githubusercontent.com/redblacker8/storm-ext/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Storm-ext Fork"
+      ],
+      "subplugins": [],
+      "snapshotId": "75d7c678c729ff77d30daa09"
+    },
+    {
+      "id": "cloudstream:repo:225a21aa377a74c2ab03",
+      "ecosystem": "cloudstream",
+      "name": "CNC Verse Repository",
+      "endpoint": "https://raw.githubusercontent.com/NivinCNC/CNCVerse-Cloud-Stream-Extension/refs/heads/builds/CNC.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CNC Verse Repository"
+      ],
+      "subplugins": [],
+      "snapshotId": "c6c20c55492125662428fab7"
+    },
+    {
+      "id": "cloudstream:repo:644926854cce1ce973b8",
+      "ecosystem": "cloudstream",
+      "name": "CloudStream Vietnamese",
+      "endpoint": "https://gitlab.com/tearrs/cloudstream-vietnamese/-/raw/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CloudStream Vietnamese"
+      ],
+      "subplugins": [],
+      "snapshotId": "cfabd61aaec6a55c64d949e3"
+    },
+    {
+      "id": "cloudstream:repo:57c5a1a6bdc89e10fd3d",
+      "ecosystem": "cloudstream",
+      "name": "Avocado/Rowdy’s Extension",
+      "endpoint": "https://raw.githubusercontent.com/Rowdy-Avocado/Rowdycado-Extensions/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Avocado/Rowdy’s Extension"
+      ],
+      "subplugins": [],
+      "snapshotId": "88d80f97326e2ee520bd459a"
+    },
+    {
+      "id": "cloudstream:repo:fe124992badf30c96689",
+      "ecosystem": "cloudstream",
+      "name": "English Provider Repository",
+      "endpoint": "https://codeberg.org/cloudstream/cloudstream-extensions/raw/branch/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "English Provider Repository",
+        "Multilingual Providers Repository",
+        "English"
+      ],
+      "subplugins": [],
+      "snapshotId": "196b49bda20ad6dc30511a1f"
+    },
+    {
+      "id": "cloudstream:repo:d3411db49e70506a66c8",
+      "ecosystem": "cloudstream",
+      "name": "Hexated Providers Repository",
+      "endpoint": "https://codeberg.org/cloudstream/cloudstream-extensions-hexated/raw/branch/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Hexated Providers Repository",
+        "Hexated (Multilingual)"
+      ],
+      "subplugins": [],
+      "snapshotId": "b61e2f0e340db7340bc5a95c"
+    },
+    {
+      "id": "cloudstream:repo:7bf3be1b4c014ae83822",
+      "ecosystem": "cloudstream",
+      "name": "LikDev-256 Providers Repository",
+      "endpoint": "https://codeberg.org/cloudstream/likdev256-tamil-providers/raw/branch/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "LikDev-256 Providers Repository",
+        "SkillShare-Repo",
+        "Likdev (Hindi/Urdu)"
+      ],
+      "subplugins": [],
+      "snapshotId": "6a340a5dfcd4eaf57d95a8e8"
+    },
+    {
+      "id": "cloudstream:repo:4abdc06a126a90a6867f",
+      "ecosystem": "cloudstream",
+      "name": "Arabic Providers Repository",
+      "endpoint": "https://codeberg.org/cloudstream/arab/raw/branch/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Arabic Providers Repository",
+        "Horis Providers Repository",
+        "Arabic"
+      ],
+      "subplugins": [],
+      "snapshotId": "cc0a1363a5e4bc544e3307d0"
+    },
+    {
+      "id": "cloudstream:repo:53fd40de72823a6f715e",
+      "ecosystem": "cloudstream",
+      "name": "FStream",
+      "endpoint": "https://git.disroot.org/ayza/FStream/raw/branch/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "FStream"
+      ],
+      "subplugins": [],
+      "snapshotId": "58f27a51dd62b8923625aa26"
+    },
+    {
+      "id": "cloudstream:repo:028df4a7353f3fe88d38",
+      "ecosystem": "cloudstream",
+      "name": "ExtCloud Repo",
+      "endpoint": "https://raw.githubusercontent.com/duro92/ExtCloud/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "ExtCloud Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "70d13bd269a161c508a6167e"
+    },
+    {
+      "id": "cloudstream:repo:647b46711a987c93f26e",
+      "ecosystem": "cloudstream",
+      "name": "BongNgoPlugins",
+      "endpoint": "https://raw.githubusercontent.com/duongnv1996/bongngo-cs3-extension/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "BongNgoPlugins"
+      ],
+      "subplugins": [],
+      "snapshotId": "03241b69400644b229803bd3"
+    },
+    {
+      "id": "cloudstream:repo:5c37138896896c9da356",
+      "ecosystem": "cloudstream",
+      "name": "IndusAryan’s Plugins",
+      "endpoint": "https://codeberg.org/IndusAryan/AR/raw/branch/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "IndusAryan’s Plugins"
+      ],
+      "subplugins": [],
+      "snapshotId": "da2cd4b59a027685c96381de"
+    },
+    {
+      "id": "cloudstream:repo:640cb478507ab0ca4299",
+      "ecosystem": "cloudstream",
+      "name": "Darkdemon Extensions",
+      "endpoint": "https://raw.githubusercontent.com/daarkdemon/cs-darkdemon-extensions/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Darkdemon Extensions"
+      ],
+      "subplugins": [],
+      "snapshotId": "caa6916381842407409f7e99"
+    },
+    {
+      "id": "cloudstream:repo:56d109b77b882e113ccc",
+      "ecosystem": "cloudstream",
+      "name": "Multilingual",
+      "endpoint": "https://codeberg.org/cloudstream/cloudstream-extensions-multilingual/raw/branch/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Multilingual"
+      ],
+      "subplugins": [],
+      "snapshotId": "76913ee295ef29192bb9677b"
+    },
+    {
+      "id": "cloudstream:repo:82bc8116370347cfe0b9",
+      "ecosystem": "cloudstream",
+      "name": "Storm (Spanish)",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Storm (Spanish)"
+      ],
+      "subplugins": [],
+      "snapshotId": "7186b7dff88d06bc4716f9a4"
+    },
+    {
+      "id": "cloudstream:repo:a014c1c4bf8445913534",
+      "ecosystem": "cloudstream",
+      "name": "Crunchyroll",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Crunchyroll"
+      ],
+      "subplugins": [],
+      "snapshotId": "4c3a2c602fb72fc8d23ee67d"
+    },
+    {
+      "id": "cloudstream:repo:7458199fe97a184002bf",
+      "ecosystem": "cloudstream",
+      "name": "French",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "French"
+      ],
+      "subplugins": [],
+      "snapshotId": "a8f0fea79dcd38ff79178970"
+    },
+    {
+      "id": "cloudstream:repo:58cc4365196a96fd9be3",
+      "ecosystem": "cloudstream",
+      "name": "Horis (Chinese/Mandarin)",
+      "endpoint": "https://codeberg.org/cloudstream/cloudstream-extensions-horis/raw/branch/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Horis (Chinese/Mandarin)"
+      ],
+      "subplugins": [],
+      "snapshotId": "f08b2bd34bb052a7eee5c0e3"
+    },
+    {
+      "id": "cloudstream:repo:928afdf6d62f22a9bfc0",
+      "ecosystem": "cloudstream",
+      "name": "CakesTwix (Ukrainian)",
+      "endpoint": "https://raw.githubusercontent.com/CakesTwix/cloudstream-extensions-uk/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "CakesTwix (Ukrainian)"
+      ],
+      "subplugins": [],
+      "snapshotId": "40fe5f7e5eaf387c1726e3ef"
+    },
+    {
+      "id": "cloudstream:repo:a45b2f9acf3d290d5c76",
+      "ecosystem": "cloudstream",
+      "name": "FStream (French)",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "FStream (French)"
+      ],
+      "subplugins": [],
+      "snapshotId": "142af4e34099a8a07fb3d9fd"
+    },
+    {
+      "id": "cloudstream:repo:d22c09bca7df43a85841",
+      "ecosystem": "cloudstream",
+      "name": "Avocado",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Avocado"
+      ],
+      "subplugins": [],
+      "snapshotId": "cf5428a8533642214a5384d6"
+    },
+    {
+      "id": "cloudstream:repo:748c2bb5d8e4e1159e63",
+      "ecosystem": "cloudstream",
+      "name": "Arabico (Arabic)",
+      "endpoint": "https://pastebin.com/raw/KkD9Adg",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Arabico (Arabic)"
+      ],
+      "subplugins": [],
+      "snapshotId": "3e9070db033763257a658627"
+    },
+    {
+      "id": "cloudstream:repo:ab2c6adf1fe10cde3a21",
+      "ecosystem": "cloudstream",
+      "name": "Hexated",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Hexated"
+      ],
+      "subplugins": [],
+      "snapshotId": "0a4c1a0bc0dfbe32d4264b0a"
+    },
+    {
+      "id": "cloudstream:repo:ba118bf7fc9c1aedc1ed",
+      "ecosystem": "cloudstream",
+      "name": "English",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "English"
+      ],
+      "subplugins": [],
+      "snapshotId": "b9040a1f63b7f905b61eeddd"
+    },
+    {
+      "id": "cloudstream:repo:5870f9bfd157bd7ef057",
+      "ecosystem": "cloudstream",
+      "name": "Storm",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Storm"
+      ],
+      "subplugins": [],
+      "snapshotId": "c901fbda55f70d570ceb81f2"
+    },
+    {
+      "id": "cloudstream:repo:d6840de8d5ba29fdfd14",
+      "ecosystem": "cloudstream",
+      "name": "Horis",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Horis"
+      ],
+      "subplugins": [],
+      "snapshotId": "c8bacfd8f5572b55c83c0476"
+    },
+    {
+      "id": "cloudstream:repo:1b712a7e30b431f5898b",
+      "ecosystem": "cloudstream",
+      "name": "Indian Languages",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Indian Languages"
+      ],
+      "subplugins": [],
+      "snapshotId": "040de6f07a1188ee26fe1c90"
+    },
+    {
+      "id": "cloudstream:repo:bb9755f32f2341006e10",
+      "ecosystem": "cloudstream",
+      "name": "Multilingual",
+      "endpoint": null,
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://cloudstream-apk.com/cloudstream-repositories-extensions/"
+      ],
+      "aliases": [
+        "Multilingual"
+      ],
+      "subplugins": [],
+      "snapshotId": "c2c30f869531d9830b3521d6"
+    },
+    {
+      "id": "cloudstream:repo:8586dce7d9698cfedbc5",
+      "ecosystem": "cloudstream",
+      "name": "SkillShare-Repo",
+      "endpoint": "https://raw.githubusercontent.com/techtanic/SkillShare-Repo/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "SkillShare-Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "ac75972df1b11ec4731b21ea"
+    },
+    {
+      "id": "cloudstream:repo:767bc9273ff4cf30978f",
+      "ecosystem": "cloudstream",
+      "name": "Luna712-CloudStream-Extensions",
+      "endpoint": "https://raw.githubusercontent.com/Luna712/Luna712-CloudStream-Extensions/master/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "Luna712-CloudStream-Extensions"
+      ],
+      "subplugins": [],
+      "snapshotId": "394ab5552e9739887693a9fb"
+    },
+    {
+      "id": "cloudstream:repo:9cdaf95f7b4121b66bcf",
+      "ecosystem": "cloudstream",
+      "name": "ItaliaInStreaming",
+      "endpoint": "https://raw.githubusercontent.com/DieGon7771/ItaliaInStreaming/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "ItaliaInStreaming"
+      ],
+      "subplugins": [],
+      "snapshotId": "3394eb95f4ee0df9737b95c0"
+    },
+    {
+      "id": "cloudstream:repo:b48ff9378deaafdc8e98",
+      "ecosystem": "cloudstream",
+      "name": "raghav",
+      "endpoint": "https://raw.githubusercontent.com/KSHITIJ8473/raghav/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "raghav"
+      ],
+      "subplugins": [],
+      "snapshotId": "6311c15f416f549cc50783f6"
+    },
+    {
+      "id": "cloudstream:repo:c23a6d925fd6e457d22f",
+      "ecosystem": "cloudstream",
+      "name": "cloudstream-frenchrepo",
+      "endpoint": "https://raw.githubusercontent.com/mouradchaouche/cloudstream-frenchrepo/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "cloudstream-frenchrepo"
+      ],
+      "subplugins": [],
+      "snapshotId": "4de993bda3a7ac261cf1bfa1"
+    },
+    {
+      "id": "cloudstream:repo:de4476366b9268e9b26e",
+      "ecosystem": "cloudstream",
+      "name": "Cloudstream",
+      "endpoint": "https://raw.githubusercontent.com/yorik100/Cloudstream/refs/heads/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "Cloudstream"
+      ],
+      "subplugins": [],
+      "snapshotId": "e3ffca97db00b90d1d116b02"
+    },
+    {
+      "id": "cloudstream:repo:0f9d3d6da8dbf199acdc",
+      "ecosystem": "cloudstream",
+      "name": "allforu-repo",
+      "endpoint": "https://raw.githubusercontent.com/RVRBEAST76/allforu-repo/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "allforu-repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "0eef22b813fe30ba9a190ef5"
+    },
+    {
+      "id": "cloudstream:repo:0676440e7a71ff53cfa4",
+      "ecosystem": "cloudstream",
+      "name": "Ayu-CloudStream-Games",
+      "endpoint": "https://raw.githubusercontent.com/errorcode26/Ayu-CloudStream-Games/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "Ayu-CloudStream-Games"
+      ],
+      "subplugins": [],
+      "snapshotId": "ffe939d74020246c6f700df3"
+    },
+    {
+      "id": "cloudstream:repo:ac72bf1fe7b19e51c524",
+      "ecosystem": "cloudstream",
+      "name": "FLUMMOX-Repo",
+      "endpoint": "https://raw.githubusercontent.com/FlummoxGamer/FLUMMOX-Repo/builds/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "FLUMMOX-Repo"
+      ],
+      "subplugins": [],
+      "snapshotId": "5cd02a97f30e92675e318b21"
+    },
+    {
+      "id": "cloudstream:repo:8891a2ef1f43bab6cddc",
+      "ecosystem": "cloudstream",
+      "name": "Desi",
+      "endpoint": "https://raw.githubusercontent.com/Faisal0786/Desi/main/repo.json",
+      "status": "REFERENCE_ONLY",
+      "runtimeEnabled": false,
+      "note": "Directory reference; no plugin runtime integrated or playback tested.",
+      "sourceUrls": [
+        "https://raw.githubusercontent.com/recloudstream/cs-repos/master/repos-db.json"
+      ],
+      "aliases": [
+        "Desi"
+      ],
+      "subplugins": [],
+      "snapshotId": "65f49383fb8b729ab08e6b91"
+    }
+  ]
+}
