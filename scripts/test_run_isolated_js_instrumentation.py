@@ -23,6 +23,8 @@ class InstrumentationResultTest(unittest.TestCase):
             ("INSTRUMENTATION_FAILED: crashed\nOK (1 test)", 0),
             ("INSTRUMENTATION_STATUS_CODE: -2\nOK (1 test)", 0),
             ("OK (1 test)", 1),
+            ("OK (1 test)", 0),
+            ("OK (1 test)\nINSTRUMENTATION_CODE: -1\nINSTRUMENTATION_CODE: -1", 0),
             ("OK (1 test)\nOK (2 tests)", 0),
         ]:
             with self.subTest(text=text, code=code):

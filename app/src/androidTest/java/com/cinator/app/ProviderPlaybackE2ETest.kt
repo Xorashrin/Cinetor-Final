@@ -2,6 +2,7 @@ package com.cinator.app
 
 import android.net.Uri
 import android.os.Build
+import android.os.Process
 import android.os.SystemClock
 import android.util.Log
 import android.view.ViewGroup
@@ -32,7 +33,8 @@ import com.cinator.app.domain.MediaKind
 import com.cinator.app.domain.StreamProtocol
 import com.cinator.app.domain.StreamSource
 import com.cinator.app.downloads.CinatorDownloadManager
-import com.cinator.app.providers.BundledPlaybackProviders
+import com.cinator.app.engines.nuvio.runtime.IsolatedJsResult
+import com.cinator.app.providers.AndroidBundledPlaybackProviders
 import com.cinator.app.providers.ProviderResolver
 import com.cinator.app.providers.ResolveRequest
 import org.json.JSONArray
@@ -43,6 +45,7 @@ import java.io.File
 import java.io.IOException
 import java.security.MessageDigest
 import java.util.concurrent.Callable
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -52,7 +55,8 @@ import kotlin.math.abs
 /**
  * Live, opt-in-by-test-selection integration test; unavailable Internet is a FAILURE, not a skip.
  *
- * Uses the real bundled provider, resolver and downloader with the target application's Context.
+ * Uses the real Android bundled provider, isolated native resolver and downloader with the target
+ * application's Context. Native candidate identity must match the source used throughout playback.
  * A test-owned PlayerView is attached above MainActivity. It proves Media3 playback and API-level
  * controls, NOT navigation through Compose cards, the app's player chrome, fullscreen, or fallback.
  * Evidence is written incrementally to JSON files under targetContext.filesDir/provider-e2e, including on
@@ -75,7 +79,9 @@ class ProviderPlaybackE2ETest {
         var scenario: ActivityScenario<MainActivity>? = null
         var session: PlayerSession? = null
         try {
+            evidence.stage("android_lossless_numeric_admission") { rejectsRoundedApiNumbersBeforeNativeAdmission() }
             val http = ObservedHttp(evidence)
+            val nativeResults = CopyOnWriteArrayList<IsolatedJsResult>()
             val (manifest, providers) = evidence.stage("bundled_manifest") {
                 val raw = context.assets.open("open_films.json").bufferedReader().use { it.readText() }
                 val root = JSONObject(raw)
@@ -94,7 +100,11 @@ class ProviderPlaybackE2ETest {
                     if (pinned.has("sha256") && !pinned.isNull("sha256")) pinned.getString("sha256") else null
                 )
                 primary.sha256?.let { check(it.matches(Regex("[0-9a-fA-F]{64}"))) { "Invalid full SHA-256 pin" } }
-                val registered = BundledPlaybackProviders.fromJson(raw, http)
+                val registered = AndroidBundledPlaybackProviders.fromContext(context, http, onNativeResult = { result ->
+                    // Diagnostics only: keep the real broker result, never create or replace one.
+                    nativeResults.add(result)
+                    evidence.nativeResult(result)
+                })
                 evidence.observe("film", obj(
                     "id" to FILM_ID, "uuid" to UUID, "contentId" to CONTENT_ID,
                     "expectedBytes" to primary.bytes, "expectedDurationMs" to primary.durationMs,
@@ -124,18 +134,51 @@ class ProviderPlaybackE2ETest {
                 }
             }
             val source = evidence.stage("resolve") {
+                val nativeStart = nativeResults.size
                 val resolved = ProviderResolver(providers).resolve(ResolveRequest(details.card))
+                // Only callbacks from this resolve count; an earlier/separate JNI probe is not evidence.
+                val observed = nativeResults.toList().drop(nativeStart)
+                evidence.observe("nativeResolution", obj(
+                    "observedCallCount" to observed.size, "appUid" to context.applicationInfo.uid,
+                    "appPid" to Process.myPid()
+                ))
+                check(observed.isNotEmpty()) { "Production provider resolution made no observed native calls" }
+                val candidates = observed.flatMap { result ->
+                    check(result.uid >= 0 && result.uid != context.applicationInfo.uid) { "Resolver did not use an isolated service UID" }
+                    check(result.pid > 0 && result.pid != Process.myPid()) { "Resolver ran in the app process" }
+                    check(result.engineVersion == EXPECTED_ENGINE_VERSION) { "Unexpected native engine: ${result.engineVersion}" }
+                    val rows = JSONArray(result.json)
+                    check(rows.length() <= 1) { "Native resolver returned multiple candidates for one quality" }
+                    (0 until rows.length()).map { rows.getJSONObject(it) }.onEach { candidate ->
+                        check(candidate.getString("uuid") == UUID) { "Native resolver returned a different film" }
+                        check(candidate.getInt("height") in 144..2160 && candidate.getLong("size") > 0)
+                    }
+                }
                 check(resolved.isNotEmpty()) { "Live provider resolution returned no usable film (network/availability failure)" }
                 check(resolved.size <= ProviderResolver.MAX_SOURCES)
+                check(resolved.all { stream -> candidates.any { candidate ->
+                    stream.contentId == "blender:${candidate.getString("uuid")}" &&
+                        stream.id == "${stream.contentId}:${candidate.getInt("height")}" &&
+                        stream.quality == "${candidate.getInt("height")}p" && stream.url == candidate.getString("url")
+                } }) { "A resolved source has no matching native UUID/quality/URL output" }
                 val selected = resolved.singleOrNull { it.url == manifest.url }
                     ?: error("Resolved sources do not contain the exact audited full-film rendition")
+                val nativeCandidate = candidates.singleOrNull {
+                    it.getString("uuid") == UUID && it.getInt("height") == manifest.height && it.getString("url") == selected.url
+                } ?: error("Selected rendition is missing or duplicated in observed native output")
+                check(nativeCandidate.getLong("size") == manifest.bytes) { "Native candidate differs from audited full-film size" }
                 check(selected.id == "$CONTENT_ID:${manifest.height}")
+                check(selected.quality == "${manifest.height}p")
                 check(selected.contentId == CONTENT_ID && selected.providerId == PROVIDER_ID)
                 check(selected.section == FeedSection.HOME && !selected.isLive)
                 check(selected.protocol == StreamProtocol.MP4 && selected.isDownloadable)
                 check(selected.headers.isEmpty()) { "Audited public film unexpectedly requires request headers" }
                 check(http.successfulCalls.get() > 0) { "No successful real provider HTTP calls were observed" }
-                evidence.observe("resolve", obj("sourceCount" to resolved.size, "streamId" to selected.id, "url" to selected.url))
+                evidence.observe("resolve", obj(
+                    "sourceCount" to resolved.size, "streamId" to selected.id, "url" to selected.url,
+                    "contentId" to selected.contentId, "quality" to selected.quality,
+                    "nativeObservedCallCount" to observed.size, "matchedNativeCandidate" to nativeCandidate
+                ))
                 selected
             }
             scenario = evidence.stage("activity_launch") { ActivityScenario.launch(MainActivity::class.java) }
@@ -165,7 +208,10 @@ class ProviderPlaybackE2ETest {
             exercisePlayback("online", session, manifest, evidence)
             session.close()
             session = null
-            evidence.observe("onlineTransport", obj("bytesRead" to onlineBytes.get(), "byteLimit" to 32L * 1024 * 1024))
+            evidence.observe("onlineTransport", obj(
+                "bytesRead" to onlineBytes.get(), "byteLimit" to 32L * 1024 * 1024,
+                "streamId" to source.id, "sourceUrl" to source.url
+            ))
             check(onlineBytes.get() > 0) { "Online player did not read network bytes" }
 
             val file = evidence.stage("full_download") { downloadAndVerify(details.card.copy(streams = listOf(source)), source, manifest, evidence) }
@@ -191,6 +237,7 @@ class ProviderPlaybackE2ETest {
                 check(offlineFactory.rejectedOpens.get() == 1) { "Offline playback attempted a forbidden URI" }
                 evidence.observe("offlineTransport", obj(
                     "implementation" to "FileDataSource only; exact canonical file",
+                    "localFile" to file.canonicalPath, "streamId" to source.id, "sourceUrl" to source.url,
                     "fileOpens" to offlineFactory.fileOpens.get(), "bytesRead" to offlineFactory.bytesRead.get(),
                     "negativeProbeRejections" to 1, "playbackForbiddenUriAttempts" to offlineFactory.rejectedOpens.get() - 1,
                     "deviceNetworkDisabled" to false
@@ -214,6 +261,69 @@ class ProviderPlaybackE2ETest {
                     Log.i("ProviderPlaybackE2E", "Evidence: ${evidence.file.absolutePath}")
                 }
             }
+        }
+    }
+
+    /** Negative fixture only: no fabricated catalog/playback or successful native result. */
+    private fun rejectsRoundedApiNumbersBeforeNativeAdmission() {
+        val registry = context.assets.open("open_films.json").bufferedReader().use { it.readText() }
+        val film = JSONObject(registry).getJSONArray("films").let { rows ->
+            (0 until rows.length()).map { rows.getJSONObject(it) }.single { it.getString("id") == FILM_ID }
+        }
+        val origin = "https://video.blender.org"
+        val base = obj(
+            "uuid" to UUID, "isLocal" to true, "isLive" to false,
+            "url" to "$origin/videos/watch/$UUID", "duration" to film.getLong("durationMs") / 1000,
+            "privacy" to obj("id" to 1), "blacklisted" to false, "downloadEnabled" to true,
+            "account" to obj("host" to "video.blender.org", "name" to "blender", "url" to "$origin/accounts/blender"),
+            "channel" to obj("host" to "video.blender.org", "name" to "blender_open_movies", "url" to "$origin/video-channels/blender_open_movies"),
+            "files" to JSONArray().put(obj("height" to 720, "resolution" to obj("id" to 720),
+                "fileUrl" to film.getString("streamUrl"), "size" to FILM_BYTES,
+                "hasAudio" to true, "hasVideo" to true))
+        ).toString()
+        // A valid baseline must reach the executor; otherwise every negative could pass vacuously.
+        val reachedExecutor = IllegalStateException("NUMERIC_FIXTURE_POSITIVE_CONTROL")
+        var positiveReached = false
+        val control = com.cinator.app.providers.BlenderPlaybackProvider(
+            registry, object : TextHttpClient { override fun get(url: String) = base },
+            com.cinator.app.providers.BlenderCandidateExecutor { _, _, _ ->
+                positiveReached = true
+                throw reachedExecutor
+            }
+        )
+        try {
+            control.resolve(ResolveRequest(control.catalog().single { it.id == FILM_ID }))
+            error("Valid numeric fixture did not reach executor")
+        } catch (failure: IllegalStateException) {
+            check(positiveReached && failure === reachedExecutor) { "Positive fixture failed before executor admission" }
+        }
+        val duration = film.getLong("durationMs") / 1000
+        val edits = listOf(
+            "\"height\":720" to "\"height\":720.0000000000000001",
+            "\"id\":720" to "\"id\":720.0000000000000001",
+            "\"size\":$FILM_BYTES" to "\"size\":110916740.000000001",
+            "\"duration\":$duration" to "\"duration\":${duration}.00000000000001"
+        )
+        // Confirm this platform really has the lossy parser behavior under review.
+        check(JSONObject("{\"value\":720.0000000000000001}").getDouble("value") == 720.0)
+        for ((old, replacement) in edits) {
+            check(base.contains(old)) { "Numeric regression fixture lost its target token" }
+            val document = base.replace(old, replacement)
+            var admitted = false
+            val provider = com.cinator.app.providers.BlenderPlaybackProvider(
+                registry, object : TextHttpClient { override fun get(url: String) = document },
+                com.cinator.app.providers.BlenderCandidateExecutor { _, _, _ ->
+                    admitted = true
+                    throw AssertionError("Rounded fractional API literal reached the native executor")
+                }
+            )
+            try {
+                val sources = provider.resolve(ResolveRequest(provider.catalog().single { it.id == FILM_ID }))
+                check(sources.isEmpty()) { "Invalid API number returned playback sources" }
+            } catch (_: IllegalArgumentException) {
+                // Rejecting the complete document is also fail-closed.
+            }
+            check(!admitted) { "Invalid API number was admitted" }
         }
     }
 
@@ -248,6 +358,8 @@ class ProviderPlaybackE2ETest {
         }
         evidence.observe("downloadResult", obj(
             "status" to entry.status.name, "bytesDownloaded" to entry.bytesDownloaded,
+            "contentId" to entry.contentId, "providerId" to entry.providerId,
+            "streamId" to entry.streamId, "sourceUrl" to entry.sourceUrl, "localFile" to entry.localFilePath,
             "totalBytes" to entry.totalBytes, "progressCallbackCount" to progress.get(),
             "largestObservedProgressBytes" to peak.get(), "error" to entry.errorMessage
         ))
@@ -477,12 +589,14 @@ class ProviderPlaybackE2ETest {
         val file = File(directory, "provider-playback-${System.currentTimeMillis()}.json")
         private val stages = JSONArray()
         private val requests = JSONArray()
+        private val nativeResults = JSONArray()
         private val observations = JSONObject()
         private val root = obj(
-            "schemaVersion" to 1, "test" to "ProviderPlaybackE2ETest", "status" to "RUNNING",
+            "schemaVersion" to 2, "test" to "ProviderPlaybackE2ETest", "status" to "RUNNING",
             "startedAtEpochMs" to System.currentTimeMillis(), "sdkInt" to Build.VERSION.SDK_INT,
             "deviceModel" to Build.MODEL, "stages" to stages, "httpRequests" to requests,
-            "observations" to observations, "scope" to "Real provider APIs, test-overlay Media3, real downloader, file-only Media3",
+            "nativeResults" to nativeResults,
+            "observations" to observations, "scope" to "Real provider APIs and isolated native resolver, test-overlay Media3, real downloader, file-only Media3",
             "notVerified" to JSONArray(listOf("App catalog/details navigation", "App player chrome", "Fullscreen/orientation", "Source switching/fallback", "Device-wide offline mode", "Audible audio output", "Watching every frame/end credits"))
         )
         init { check(directory.isDirectory || directory.mkdirs()); flush() }
@@ -504,6 +618,16 @@ class ProviderPlaybackE2ETest {
         }
         @Synchronized fun observe(name: String, value: JSONObject) { observations.put(name, value); flush() }
         @Synchronized fun http(value: JSONObject) { requests.put(value); flush() }
+        @Synchronized fun nativeResult(result: IsolatedJsResult) {
+            val value = obj(
+                "uid" to result.uid, "pid" to result.pid,
+                "engineVersion" to result.engineVersion, "rawResultJson" to result.json
+            )
+            nativeResults.put(value)
+            flush() // Preserve the actual reply even if parsing fails.
+            value.put("candidates", JSONArray(result.json))
+            flush()
+        }
         @Synchronized fun finish(status: String, failure: Throwable? = null) {
             root.put("status", status).put("elapsedMs", SystemClock.elapsedRealtime() - start)
             if (failure != null) root.put("failure", obj("exception" to failure.javaClass.name, "message" to failure.message))
@@ -518,6 +642,7 @@ class ProviderPlaybackE2ETest {
         private const val CONTENT_ID = "blender:$UUID"
         private const val PROVIDER_ID = "blender-open-films"
         private const val FILM_BYTES = 110_916_740L
+        private const val EXPECTED_ENGINE_VERSION = "QuickJS 2026-06-04 (04be246)"
         private fun obj(vararg entries: Pair<String, Any?>) = JSONObject().apply {
             entries.forEach { (key, value) -> put(key, value ?: JSONObject.NULL) }
         }

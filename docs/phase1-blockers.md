@@ -4,8 +4,8 @@ The original requested phase remains **incomplete**. Preparatory modules and sta
 
 ## Current deliverable boundary
 
-- Existing Blender Open Films provider remains active with the v0.4 one-film Android E2E evidence. It is not a replacement for the requested engines.
-- New Nuvio policy validates descriptor/digest and limited message shapes only. Embedded approved-plugin set is empty; all execution stays rejected. Its CPU/memory/IPC limits are design limits, not runtime enforcement.
+- Existing Blender Open Films provider remains active; v0.6 exact-commit Android one-film playback/download/file-only regression passed. It is not a replacement for the requested engines.
+- Full Nuvio plugin admission remains disabled. A separate source-pinned native QuickJS slice now executes one authored, digest-pinned Blender resolver in an unexported isolated service. API35/x86_64 live-metadata/UID/admission/rebind evidence passed in run 40236640366. Native host deadline/OOM/stack tests pass, but Android fault injection, file/socket denial and full host bindings remain unverified. Production native-result-to-playback wiring is a distinct gate.
 - New CloudStream policy validates descriptors and bounded embedded ZIP/digest metadata only. It does not class-load DEX, fetch plugin binaries or grant execution.
 - New Internet Archive adapter is independently implemented against public API shapes. No item is default-enabled: exact file transport, codec and Android playback proof are incomplete. Metadata/uploader license claims do not independently establish rights.
 - New external-provider policy does not return native streams. No reviewed routes are activated. It cannot supply Anime/K-Drama raw-video playback or download.
@@ -15,7 +15,7 @@ The original requested phase remains **incomplete**. Preparatory modules and sta
 
 | Gate | Evidence still required |
 |---|---|
-| Actual Nuvio runtime | Reviewed native engine source/build and license inventory; working isolated service; minimal host API; network/credential boundaries; hard failure recovery; a specifically authorized embedded plugin; device compatibility/E2E tests. |
+| Actual Nuvio runtime | Beyond the v0.6 source-built fixed-script/service proof: production native-result-to-playback verification; Nuvio host APIs; network/credential boundaries; Android hard-failure recovery; specifically authorized ecosystem plugins; broader device compatibility/E2E tests. |
 | Actual CloudStream compatibility | Reviewed/reproducibly rebuilt provider code or accepted restricted execution model; no assumption that PathClassLoader or isolated UID contains arbitrary DEX; license/media-rights clearance and explicit compatibility limits. |
 | Per-plugin coverage | Immutable plugin identities/versions/artifacts; source and publisher authorization; digest/signature/revocation; software-license/dependency notices; rights/territory/playback/download decisions; Android evidence and expiry/review dates. |
 | Anime/K-Drama | Real authorized direct playback or separately approved official embedded/external playback. No available universal no-key raw-stream API has been verified. Metadata remains metadata. |

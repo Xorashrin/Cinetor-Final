@@ -27,7 +27,8 @@ def validate_instrumentation(text, returncode):
         r"Process crashed|INSTRUMENTATION_STATUS_CODE:\s*-[1-9]\d*|"
         r"INSTRUMENTATION_RESULT:\s*(?:shortMsg|longMsg)=|"
         r"INSTRUMENTATION_CODE:\s*(?!-1\b)-?\d+", text, re.IGNORECASE)
-    if returncode != 0 or success != ["OK (1 test)"] or failure:
+    terminal_codes = re.findall(r"^\s*INSTRUMENTATION_CODE:\s*(-?\d+)\s*$", text, re.MULTILINE)
+    if returncode != 0 or success != ["OK (1 test)"] or terminal_codes != ["-1"] or failure:
         raise ValueError("Isolated-JS instrumentation did not pass exactly one test")
 
 

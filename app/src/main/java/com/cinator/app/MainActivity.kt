@@ -75,7 +75,7 @@ import com.cinator.app.ui.FeedFilterHelper
 import com.cinator.app.ui.FeedUiState
 import com.cinator.app.ui.ForegroundDownloadJobs
 import com.cinator.app.ui.HeroBanner
-import com.cinator.app.providers.BundledPlaybackProviders
+import com.cinator.app.providers.AndroidBundledPlaybackProviders
 import com.cinator.app.providers.PlaybackProvider
 import com.cinator.app.providers.ProviderResolver
 import com.cinator.app.providers.ResolveRequest
@@ -164,9 +164,7 @@ fun CinatorApp() {
     // The tiny audited asset contains only registry data; provider network work runs on IO below.
     val providersResult = remember {
         runCatching {
-            context.assets.open("open_films.json").bufferedReader().use {
-                BundledPlaybackProviders.fromJson(it.readText())
-            }
+            AndroidBundledPlaybackProviders.fromContext(context)
         }
     }
     val providers = providersResult.getOrElse { emptyList() }

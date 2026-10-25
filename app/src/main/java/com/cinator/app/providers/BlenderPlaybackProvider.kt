@@ -15,7 +15,11 @@ import java.util.concurrent.CancellationException
  * The bundled URL is evidence/quality preference, never a fallback for an unavailable API.
  * CC permission comes from the film-specific audit, not PeerTube's often Unknown licence.
  */
-class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = BoundedHttpClient()) : PlaybackProvider {
+class BlenderPlaybackProvider(
+    raw: String,
+    private val http: TextHttpClient = BoundedHttpClient(),
+    private val candidateExecutor: BlenderCandidateExecutor? = null
+) : PlaybackProvider {
     override val info = ProviderInfo(PROVIDER_ID, "Blender Open Films", FeedSection.HOME,
         ProviderCapabilities(playback = true, download = true), "https://studio.blender.org/films/")
 
@@ -80,7 +84,7 @@ class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = Bo
 
     override fun details(card: MediaCard): ProviderDetails {
         val film = selected(card)
-        val data = load(film)
+        val data = load(film).second
         val description = data.opt("description") as? String
         val poster = artwork(data.opt("previewPath") as? String, film.pin.uuid)
             ?: artwork(data.opt("thumbnailPath") as? String, film.pin.uuid)
@@ -93,39 +97,85 @@ class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = Bo
     override fun resolve(request: ResolveRequest): List<StreamSource> {
         val film = selected(request.card)
         require(request.episode == null) { "Blender open films do not have episodes" }
-        val data = load(film)
+        val (document, data) = load(film)
         val listedFiles = mutableListOf<JSONObject>()
+        var totalRows = 0
         fun collect(files: org.json.JSONArray?) {
+            totalRows += files?.length() ?: 0
+            require(totalRows <= 256) { "Blender file row budget exceeded" }
             for (index in 0 until (files?.length() ?: 0)) {
                 interrupted()
                 files?.optJSONObject(index)?.let(listedFiles::add)
             }
         }
+        require(!data.has("files") || data.opt("files") is org.json.JSONArray) { "Invalid Blender files" }
         collect(data.optJSONArray("files"))
         // PeerTube may move direct file entries beneath streamingPlaylists. Never use
         // playlistUrl, torrentUrl, fileDownloadUrl or a fragment-based/trailer URL.
+        require(!data.has("streamingPlaylists") || data.opt("streamingPlaylists") is org.json.JSONArray) { "Invalid Blender playlists" }
         val playlists = data.optJSONArray("streamingPlaylists")
+        require((playlists?.length() ?: 0) <= 8) { "Blender playlist budget exceeded" }
         for (index in 0 until (playlists?.length() ?: 0)) {
             interrupted()
-            collect(playlists?.optJSONObject(index)?.optJSONArray("files"))
+            val playlist = playlists?.optJSONObject(index)
+            require(playlist?.opt("files") is org.json.JSONArray) { "Invalid Blender playlist files" }
+            collect(playlist?.optJSONArray("files"))
         }
-        val candidates = listedFiles.mapNotNull { file ->
+        val validFiles = listedFiles.filter { file ->
             interrupted()
-            val height = file.optInt("height", -1)
-            if (height !in 144..2160 || file.optJSONObject("resolution")?.optInt("id") != height ||
-                file.opt("fileUrl") != fileUrl(film.pin.uuid, height) || file.optLong("size", -1) <= 0 ||
-                file.opt("hasAudio") != true || file.opt("hasVideo") != true) return@mapNotNull null
-            height
-        }.distinct().sortedWith(compareBy<Int> {
+            val height = safeInteger(file.opt("height"))
+            height != null && height in 144..2160 &&
+                safeInteger(file.optJSONObject("resolution")?.opt("id")) == height &&
+                file.opt("fileUrl") == fileUrl(film.pin.uuid, height.toInt()) &&
+                safeInteger(file.opt("size")) != null && file.opt("hasAudio") == true && file.opt("hasVideo") == true
+        }
+        val candidates = validFiles.map { safeInteger(it.opt("height"))!!.toInt() }.distinct().sortedWith(compareBy<Int> {
             when { it == film.pin.height -> 0; it < film.pin.height -> 1; else -> 2 }
         }.thenBy { if (it < film.pin.height) -it else it }).take(3)
         interrupted()
-        return candidates.map { height ->
+        val sources = candidates.mapNotNull { height ->
+            interrupted()
+            if (candidateExecutor != null) {
+                val output = try { candidateExecutor.execute(document, film.pin.uuid, height) }
+                catch (_: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                    throw CancellationException("Blender native request interrupted")
+                }
+                interrupted()
+                val candidate = parseCandidate(output) ?: return@mapNotNull null
+                val file = validFiles.first { safeInteger(it.opt("height")) == height.toLong() }
+                require(candidate.length() == 4 && candidate.opt("uuid") == film.pin.uuid &&
+                    safeInteger(candidate.opt("height")) == height.toLong() && candidate.opt("url") == file.opt("fileUrl") &&
+                    safeInteger(candidate.opt("size")) == safeInteger(file.opt("size"))) { "Native candidate differs from reviewed API entry" }
+            }
             StreamSource(id = "${film.card.contentId}:$height", label = "${film.pin.title} • ${height}p • Full film",
                 url = fileUrl(film.pin.uuid, height), protocol = StreamProtocol.MP4, quality = "${height}p",
                 isDownloadable = film.downloadAllowed && data.opt("downloadEnabled") == true,
                 providerId = info.id, contentId = film.card.contentId, section = info.section)
         }
+        interrupted()
+        return sources
+    }
+
+    /** Both API and native numbers are parsed exactly, without JSONTokener/Double. */
+    private fun parseCandidate(raw: String): JSONObject? {
+        val rows = BoundedLosslessJson.parse(raw, 16 * 1024) as? org.json.JSONArray
+            ?: throw IllegalArgumentException("Invalid native candidate array")
+        if (rows.length() == 0) return null
+        require(rows.length() == 1) { "Invalid native candidate count" }
+        val result = rows.optJSONObject(0) ?: throw IllegalArgumentException("Invalid native candidate object")
+        require(result.length() == 4 && listOf("uuid", "height", "url", "size").all(result::has)) {
+            "Unexpected native candidate fields"
+        }
+        return result
+    }
+
+    private fun safeInteger(value: Any?): Long? {
+        if (value !is Number) return null
+        val number = try { java.math.BigDecimal(value.toString()).longValueExact() }
+            catch (_: NumberFormatException) { return null }
+            catch (_: ArithmeticException) { return null }
+        return number.takeIf { it in 1..9007199254740991L }
     }
 
     private fun selected(card: MediaCard): Film {
@@ -136,7 +186,7 @@ class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = Bo
         return film
     }
 
-    private fun load(film: Film): JSONObject {
+    private fun load(film: Film): Pair<String, JSONObject> {
         interrupted()
         val raw = try { http.get(film.apiUrl) }
         catch (e: CancellationException) { throw e }
@@ -148,8 +198,8 @@ class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = Bo
             throw IOException("Blender film API unavailable")
         }
         interrupted()
-        require(raw.length <= 2 * 1024 * 1024) { "Blender API response exceeds size budget" }
-        val data = JSONObject(raw)
+        val data = BoundedLosslessJson.parse(raw, 64 * 1024) as? JSONObject
+            ?: throw IllegalArgumentException("Invalid Blender API object")
         val account = data.optJSONObject("account")
         val channel = data.optJSONObject("channel")
         require(data.opt("uuid") == film.pin.uuid && data.opt("isLocal") == true &&
@@ -158,10 +208,10 @@ class BlenderPlaybackProvider(raw: String, private val http: TextHttpClient = Bo
             account.opt("url") == "$ORIGIN/accounts/blender" && channel?.opt("host") == HOST &&
             channel.opt("name") == "blender_open_movies" &&
             channel.opt("url") == "$ORIGIN/video-channels/blender_open_movies") { "Unverified Blender film provenance" }
-        require(data.optJSONObject("privacy")?.opt("id") == 1 && data.opt("blacklisted") != true) { "Blender film is not public" }
-        val seconds = data.optLong("duration", -1)
+        require(safeInteger(data.optJSONObject("privacy")?.opt("id")) == 1L && data.opt("blacklisted") != true) { "Blender film is not public" }
+        val seconds = safeInteger(data.opt("duration")) ?: throw IllegalArgumentException("Invalid full-film duration")
         require(seconds > 0 && kotlin.math.abs(seconds - film.durationMs / 1000) <= 2) { "Full-film duration changed" }
-        return data
+        return raw to data
     }
 
     companion object {

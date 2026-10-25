@@ -1,8 +1,8 @@
-# Cinator — v0.6 narrow native-runtime preview (device gate pending)
+# Cinator — native runtime and playback integration
 
 **Phase 1 remains incomplete.** The app now contains an actual source-built QuickJS native slice in an unexported Android isolated process for one authored, digest-pinned Blender metadata resolver. This proves only a narrow execution/IPC path—not Nuvio's full plugin host. Remote/community plugins, fetch/DOM/WASM/settings bindings and CloudStream DEX execution remain disabled. No new Internet Archive, France24, Anime/K-Drama or external-provider playback is activated. See [outstanding gates](docs/phase1-blockers.md).
 
-Host release and UBSan native suites pass 12/12; Android isolated-process execution/UID/death instrumentation is the current release gate. The fixed script accepts already-reviewed official Blender metadata and returns untrusted candidate JSON that the parent must validate; it never receives credentials or network/filesystem bindings.
+Host release and UBSan native suites pass 12/12. The v0.6 exact commit passed Android API35/x86_64 isolated-process execution, distinct UID, admission rejection and Binder retirement instrumentation ([run 40236640366](https://github.com/Xorashrin/Cinetor-Final/actions/runs/40236640366)). The current v0.7 candidate wires the production Android factory to the isolated resolver and revalidates each native candidate against the same fresh official API document. Lossless numeric parsing rejects Android rounding ambiguities. Exact-commit device verification is pending; prior v0.6 media evidence used the Kotlin path. The fixed script accepts already-reviewed official Blender metadata and returns untrusted candidate JSON that the parent must validate; it never receives credentials or network/filesystem bindings.
 
 More → Engine compatibility displays the generated matrix. The separate `plugin_review_ledger.json` accounts for 162 unreviewed descriptor occurrences with unknown licensing/digest/signer fields. Counts are inventory, not working-provider counts. Existing Blender capabilities below remain unchanged.
 
@@ -10,7 +10,7 @@ Native Android Kotlin/Compose app with no login or multiple profiles and no requ
 
 ## Real playback-provider scope
 
-**Blender Open Films** ships four audited films: Big Buck Bunny, Sintel, Tears of Steel and Cosmos Laundromat: First Cycle. Home contains a dedicated rail. Open a film → load details → **Resolve sources** → choose Play or Download. The provider re-fetches the exact official video API UUID, checks Blender ownership/full-film identity, and returns same-film MP4 renditions. It never substitutes a sample for an unavailable film.
+**Blender Open Films** ships four audited films: Big Buck Bunny, Sintel, Tears of Steel and Cosmos Laundromat: First Cycle. Home contains a dedicated rail. Open a film → load details → **Resolve sources** → choose Play or Download. The provider re-fetches the exact official video API UUID, checks Blender ownership/full-film identity, then requires isolated-native candidate output for each selected same-film MP4 rendition. Native failure, invalid output or unavailable metadata does not fall back to the old Kotlin resolver. It never substitutes a sample for an unavailable film.
 
 CC BY 3.0 project rights and credits must be preserved. Full films include their original credits; attribution/license links are displayed with details. `app/src/main/assets/open_films.json` pins audited identity and preferred quality, not a fake streaming backend.
 
