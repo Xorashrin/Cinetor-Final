@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "bundleVersion": "0.3.0",
+  "bundleVersion": "0.4.0",
   "directorySnapshotAsset": "embedded_directory_snapshot.json",
   "sources": [
     {
@@ -64,17 +64,6 @@
       ],
       "enabled": true,
       "capabilityNote": "Public playlist descriptors. Individual channels may be offline or geo-restricted; availability is not guaranteed. Downloads disabled."
-    },
-    {
-      "id": "open-cinema-mp4",
-      "name": "MDN CC0 video sample",
-      "section": "HOME",
-      "engine": "OPEN_VIDEO",
-      "endpoints": [
-        "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-      ],
-      "enabled": true,
-      "capabilityNote": "A clearly labelled CC0 sample video for native playback/download. Not a movie/episode resolver or missing-title fallback."
     }
   ]
 }

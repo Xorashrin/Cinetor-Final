@@ -1,0 +1,210 @@
+{
+  "films": [
+    {
+      "id": "big-buck-bunny",
+      "title": "Big Buck Bunny",
+      "year": 2008,
+      "apiUrl": "https://video.blender.org/api/v1/videos/bf1f3fb5-b119-4f9f-9930-8e20e892b898",
+      "rightsEvidenceUrl": "https://peach.blender.org/about/",
+      "rightsAttribution": "(c) copyright 2008, Blender Foundation / www.bigbuckbunny.org",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+      "streamUrl": "https://video.blender.org/object-storage/web_videos/bf1f3fb5-b119-4f9f-9930-8e20e892b898-720.mp4",
+      "contentLength": 110916740,
+      "verifiedAt": "2026-10-25T15:07:25.859192+00:00",
+      "rangeStatus": 206,
+      "headStatus": 200,
+      "codecEvidence": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "profile": "High",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "24/1"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "profile": "LC",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 6,
+            "channel_layout": "5.1",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "duration": "596.566000",
+          "size": "110916740"
+        }
+      },
+      "decodeExitCodes": [
+        0,
+        0
+      ],
+      "androidPlaybackVerified": false
+    },
+    {
+      "id": "sintel",
+      "title": "Sintel",
+      "year": 2010,
+      "apiUrl": "https://video.blender.org/api/v1/videos/0eb052d0-fd51-43e6-aa33-ecdbf77a5d40",
+      "rightsEvidenceUrl": "https://durian.blender.org/sharing/",
+      "rightsAttribution": "© copyright Blender Foundation | www.sintel.org",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+      "streamUrl": "https://video.blender.org/object-storage/web_videos/0eb052d0-fd51-43e6-aa33-ecdbf77a5d40-480.mp4",
+      "contentLength": 119976502,
+      "verifiedAt": "2026-10-25T15:07:25.862740+00:00",
+      "rangeStatus": 206,
+      "headStatus": 200,
+      "codecEvidence": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "profile": "High",
+            "codec_type": "video",
+            "width": 1126,
+            "height": 480,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "24/1"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "profile": "LC",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "duration": "888.092993",
+          "size": "119976502"
+        }
+      },
+      "decodeExitCodes": [
+        0,
+        0
+      ],
+      "androidPlaybackVerified": false
+    },
+    {
+      "id": "tears-of-steel",
+      "title": "Tears of Steel",
+      "year": 2012,
+      "apiUrl": "https://video.blender.org/api/v1/videos/8533ea43-4271-4a57-9694-e9d0b35e1aa1",
+      "rightsEvidenceUrl": "https://mango.blender.org/sharing/",
+      "rightsAttribution": "(CC) Blender Foundation | mango.blender.org",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+      "streamUrl": "https://video.blender.org/object-storage/web_videos/8533ea43-4271-4a57-9694-e9d0b35e1aa1-480.mp4",
+      "contentLength": 122344375,
+      "verifiedAt": "2026-10-25T15:07:25.866753+00:00",
+      "rangeStatus": 206,
+      "headStatus": 200,
+      "codecEvidence": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "profile": "High",
+            "codec_type": "video",
+            "width": 1152,
+            "height": 480,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "24/1"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "profile": "LC",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "duration": "734.216009",
+          "size": "122344375"
+        }
+      },
+      "decodeExitCodes": [
+        0,
+        0
+      ],
+      "androidPlaybackVerified": false
+    },
+    {
+      "id": "cosmos-laundromat",
+      "title": "Cosmos Laundromat: First Cycle",
+      "year": 2015,
+      "apiUrl": "https://video.blender.org/api/v1/videos/f507dfdc-e73e-45a4-9778-d758cbe1ce96",
+      "rightsEvidenceUrl": "https://gooseberry.blender.org/sharing/",
+      "rightsAttribution": "(CC) Blender Foundation | gooseberry.blender.org",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+      "streamUrl": "https://video.blender.org/object-storage/web_videos/f507dfdc-e73e-45a4-9778-d758cbe1ce96-480.mp4",
+      "contentLength": 110296781,
+      "verifiedAt": "2026-10-25T15:07:25.861006+00:00",
+      "rangeStatus": 206,
+      "headStatus": 200,
+      "codecEvidence": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "profile": "High",
+            "codec_type": "video",
+            "width": 1146,
+            "height": 480,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "24/1"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "profile": "LC",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "duration": "730.617007",
+          "size": "110296781"
+        }
+      },
+      "decodeExitCodes": [
+        0,
+        0
+      ],
+      "androidPlaybackVerified": false
+    }
+  ],
+  "filmCount": 4,
+  "scope": "Parent revalidated exact API uuid/file URLs and primary rights quotes. Source transport/ffmpeg verification, not Android playback. Full local BBB download failed due network reset/timeout; partial bytes not verified complete."
+}

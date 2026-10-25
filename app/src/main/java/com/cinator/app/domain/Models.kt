@@ -102,7 +102,10 @@ data class DownloadEntry(
     val bytesDownloaded: Long,
     val totalBytes: Long,
     val status: DownloadStatus,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val contentId: String? = null,
+    val providerId: String? = null,
+    val streamId: String? = null
 )
 
 data class BdixHostStatus(

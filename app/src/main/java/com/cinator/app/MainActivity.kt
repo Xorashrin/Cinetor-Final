@@ -54,7 +54,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.cinator.app.data.CatalogCache
-import com.cinator.app.data.CatalogLoadResult
 import com.cinator.app.data.CatalogRepository
 import com.cinator.app.data.EmbeddedCatalog
 import com.cinator.app.data.EmbeddedCatalogParser
@@ -75,6 +74,13 @@ import com.cinator.app.ui.FeedFilterHelper
 import com.cinator.app.ui.FeedUiState
 import com.cinator.app.ui.ForegroundDownloadJobs
 import com.cinator.app.ui.HeroBanner
+import com.cinator.app.providers.BundledPlaybackProviders
+import com.cinator.app.providers.PlaybackProvider
+import com.cinator.app.providers.ProviderResolver
+import com.cinator.app.providers.ResolveRequest
+import com.cinator.app.providers.EpisodeRef
+import com.cinator.app.ui.ResolvedMediaDialog
+import com.cinator.app.ui.ResolvedSelectionState
 import com.cinator.app.ui.MediaDetailDialog
 import com.cinator.app.ui.MediaRail
 import com.cinator.app.ui.MoreHubScreen
@@ -146,7 +152,20 @@ fun CinatorApp() {
         }
     }
 
-    val repository = remember(catalog) { CatalogRepository(bundle = catalog) }
+    // The tiny audited asset contains only registry data; provider network work runs on IO below.
+    val providersResult = remember {
+        runCatching {
+            context.assets.open("open_films.json").bufferedReader().use {
+                BundledPlaybackProviders.fromJson(it.readText())
+            }
+        }
+    }
+    val providers = providersResult.getOrElse { emptyList() }
+    val providerError = providersResult.exceptionOrNull()?.let { "Open film provider bundle unavailable" }
+    val repository = remember(catalog, providers) {
+        CatalogRepository(bundle = catalog, playbackProviders = providers)
+    }
+    val resolver = remember(providers) { ProviderResolver(providers) }
     val cache = remember { CatalogCache(File(context.filesDir, "catalog_cache")) }
 
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -159,7 +178,12 @@ fun CinatorApp() {
     var adultEnabled by remember { mutableStateOf(false) }
     var adultWipeJob by remember { mutableStateOf<Job?>(null) }
 
-    var selectedCard by remember { mutableStateOf<MediaCard?>(null) }
+    var resolvedSelection by remember { mutableStateOf(ResolvedSelectionState()) }
+    val selectedCard = resolvedSelection.selectedCard
+    var providerRequestJob by remember { mutableStateOf<Job?>(null) }
+    DisposableEffect(Unit) {
+        onDispose { providerRequestJob?.cancel() }
+    }
     var activePlayback by remember { mutableStateOf<ActivePlayback?>(null) }
     val downloads = remember { mutableStateListOf<DownloadEntry>() }
     val downloadGate = remember { DownloadUiGate() }
@@ -183,6 +207,79 @@ fun CinatorApp() {
     }
     var bdixResults by remember { mutableStateOf<List<BdixHostStatus>>(emptyList()) }
     var bdixProbing by remember { mutableStateOf(false) }
+
+    fun registeredProvider(card: MediaCard): PlaybackProvider? =
+        providers.singleOrNull { it.info.id == card.providerId }?.takeIf {
+            it.info.enabled && it.info.section == card.section && it.info.capabilities.details
+        }
+
+    fun hasProvider(card: MediaCard) = card.providerId == "blender-open-films" ||
+        providers.any { it.info.id == card.providerId }
+
+    fun loadSelectedDetails() {
+        val request = resolvedSelection
+        val card = request.selectedCard ?: return
+        val provider = registeredProvider(card)
+        if (provider == null) {
+            resolvedSelection = resolvedSelection.fail(request.generation, "Provider unavailable for this selection")
+            return
+        }
+        providerRequestJob?.cancel()
+        providerRequestJob = scope.launch {
+            try {
+                val details = runInterruptible(Dispatchers.IO) { provider.details(card) }
+                ensureActive()
+                resolvedSelection = resolvedSelection.receiveDetails(request.generation, details)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                resolvedSelection = resolvedSelection.fail(request.generation, "Provider details unavailable. Please retry.")
+            }
+        }
+    }
+
+    fun selectCard(card: MediaCard?) {
+        providerRequestJob?.cancel()
+        resolvedSelection = resolvedSelection.select(card)
+        if (card != null) {
+            activePlayback = null
+            if (hasProvider(card)) loadSelectedDetails()
+        }
+    }
+
+    fun selectEpisode(episode: EpisodeRef) {
+        val next = resolvedSelection.selectEpisode(episode)
+        if (next != resolvedSelection) {
+            providerRequestJob?.cancel()
+            resolvedSelection = next
+        }
+    }
+
+    fun resolveSelection() {
+        if (!resolvedSelection.detailsLoaded) {
+            // A failed details request is retried with a fresh token as well.
+            val card = resolvedSelection.selectedCard ?: return
+            selectCard(card)
+            return
+        }
+        providerRequestJob?.cancel()
+        resolvedSelection = resolvedSelection.beginResolve()
+        val request = resolvedSelection
+        val card = request.details?.card ?: return
+        providerRequestJob = scope.launch {
+            try {
+                val sources = runInterruptible(Dispatchers.IO) {
+                    resolver.resolve(ResolveRequest(card, request.episode))
+                }
+                ensureActive()
+                resolvedSelection = resolvedSelection.receiveStreams(request.generation, sources)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                resolvedSelection = resolvedSelection.fail(request.generation, "Provider resolution unavailable. Please retry.")
+            }
+        }
+    }
 
     fun setSectionState(section: FeedSection, transform: (FeedUiState) -> FeedUiState) {
         when (section) {
@@ -230,11 +327,10 @@ fun CinatorApp() {
                         searchResults = if (requestedQuery.isNotBlank())
                             cached.first.filter { it.matchesQuery(requestedQuery) } else emptyList())
                 }
-                val result = if (catalogError != null) {
-                    CatalogLoadResult(emptyList(), listOf(catalogError), 0)
-                } else runInterruptible(Dispatchers.IO) {
+                val loaded = runInterruptible(Dispatchers.IO) {
                     repository.load(section, requestedQuery)
                 }
+                val result = loaded.copy(failures = loaded.failures + listOfNotNull(catalogError, providerError))
                 if (!isCurrent()) return@request
                 val scopedItems = FeedFilterHelper.enforceIsolation(result.items, section)
                 setSectionState(section) {
@@ -266,7 +362,8 @@ fun CinatorApp() {
             } catch (error: Exception) {
                 if (isCurrent()) setSectionState(section) {
                     it.afterCatalogResult(emptyList(), listOf(error.message ?: "Catalog load failed"),
-                        catalog.sources.count { source -> source.section == section && source.enabled },
+                        catalog.sources.count { source -> source.section == section && source.enabled } +
+                            providers.count { it.info.section == section && it.info.enabled },
                         System.currentTimeMillis())
                 }
             }
@@ -285,7 +382,8 @@ fun CinatorApp() {
         if (downloads.any { it.localFilePath == target.absolutePath && it.status == DownloadStatus.COMPLETED }) return
         if (!downloadGate.begin(target.absolutePath)) return
         val queued = DownloadEntry("dl_$targetKey", card.id, card.title, card.section,
-            stream.url, target.absolutePath, 0L, 0L, DownloadStatus.QUEUED)
+            stream.url, target.absolutePath, 0L, 0L, DownloadStatus.QUEUED,
+            contentId = card.contentId, providerId = stream.providerId, streamId = stream.id)
         fun update(entry: DownloadEntry) {
             val index = downloads.indexOfFirst { it.id == entry.id }
             if (index < 0) downloads.add(0, entry) else downloads[index] = entry
@@ -379,7 +477,7 @@ fun CinatorApp() {
                             selected = selectedTab == index,
                             onClick = {
                                 if (selectedTab != index) {
-                                    selectedCard = null
+                                    selectCard(null)
                                     activePlayback = null
                                     selectedTab = index
                                 }
@@ -403,7 +501,9 @@ fun CinatorApp() {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                catalogError?.let { Text(it, color = Color(0xFFFBBF24), modifier = Modifier.padding(16.dp)) }
+                listOfNotNull(catalogError, providerError).forEach {
+                    Text(it, color = Color(0xFFFBBF24), modifier = Modifier.padding(16.dp))
+                }
                 // Media3 ExoPlayer playback panel with fallback sources
                 activePlayback?.let { pb ->
                     Box(
@@ -423,14 +523,46 @@ fun CinatorApp() {
 
                 // Modal detail dialog (prevents stacking player + detail + feed beyond screen)
                 selectedCard?.let { card ->
-                    MediaDetailDialog(
+                    if (hasProvider(card)) {
+                        val rendered = resolvedSelection
+                        rendered.details?.let { details ->
+                            ResolvedMediaDialog(
+                                details = details, loading = rendered.loading, error = rendered.error,
+                                onEpisode = { episode ->
+                                    if (rendered.generation == resolvedSelection.generation) selectEpisode(episode)
+                                },
+                                onResolve = {
+                                    if (rendered.generation == resolvedSelection.generation) resolveSelection()
+                                },
+                                onPlay = { stream ->
+                                    if (rendered.generation == resolvedSelection.generation) {
+                                        resolvedSelection.actionCard(stream)?.let { actual ->
+                                            val fallbacks = actual.streams.filter { it != stream &&
+                                                it.contentId == stream.contentId && it.providerId == stream.providerId &&
+                                                it.section == stream.section && it.isLive == stream.isLive }
+                                            selectCard(null)
+                                            activePlayback = ActivePlayback(actual.title, stream, fallbackSources = fallbacks)
+                                        }
+                                    }
+                                },
+                                onDownload = { stream ->
+                                    if (rendered.generation == resolvedSelection.generation) {
+                                        resolvedSelection.actionCard(stream)?.let { triggerDownload(it, stream) }
+                                    }
+                                },
+                                onClose = {
+                                    if (rendered.generation == resolvedSelection.generation) selectCard(null)
+                                }
+                            )
+                        }
+                    } else MediaDetailDialog(
                         card = card,
                         downloadBlocked = card.streams.any { stream ->
                             val id = "dl_${DownloadPolicy.targetKey(card, stream)}"
                             downloads.any { it.id == id && it.status in setOf(DownloadStatus.QUEUED, DownloadStatus.DOWNLOADING, DownloadStatus.COMPLETED) }
                         },
                         onPlayStream = { stream ->
-                            selectedCard = null
+                            selectCard(null)
                             val fallbacks = card.streams.filter { it.id != stream.id && it.section == card.section }
                             activePlayback = ActivePlayback(
                                 title = card.title,
@@ -444,7 +576,7 @@ fun CinatorApp() {
                                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                             }
                         },
-                        onClose = { selectedCard = null }
+                        onClose = { selectCard(null) }
                     )
                 }
 
@@ -455,12 +587,16 @@ fun CinatorApp() {
                         heroSubtitle = "Movies & Series • Direct Launch (No Login / No Profiles)",
                         onQueryChange = { q -> onSearchQueryChange(FeedSection.HOME, q) },
                         onSync = { loadSection(FeedSection.HOME, homeState.searchQuery) },
-                        onSelectCard = { selectedCard = it },
+                        onSelectCard = { selectCard(it) },
                         onQuickPlay = { stream ->
                             val hero = homeState.heroItem
-                            val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.HOME } ?: emptyList()
-                            selectedCard = null
-                            activePlayback = ActivePlayback(hero?.title ?: "Stream", stream, fallbackSources = fallbacks)
+                            if (hero != null && hasProvider(hero)) {
+                                selectCard(hero) // Cached/catalog streams must be freshly resolved before playback.
+                            } else {
+                                val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.HOME } ?: emptyList()
+                                selectCard(null)
+                                activePlayback = ActivePlayback(hero?.title ?: "Stream", stream, fallbackSources = fallbacks)
+                            }
                         }
                     )
 
@@ -469,12 +605,16 @@ fun CinatorApp() {
                         heroSubtitle = "Anime Catalog & Streams • Isolated Store & Search",
                         onQueryChange = { q -> onSearchQueryChange(FeedSection.ANIME, q) },
                         onSync = { loadSection(FeedSection.ANIME, animeState.searchQuery) },
-                        onSelectCard = { selectedCard = it },
+                        onSelectCard = { selectCard(it) },
                         onQuickPlay = { stream ->
                             val hero = animeState.heroItem
-                            val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.ANIME } ?: emptyList()
-                            selectedCard = null
-                            activePlayback = ActivePlayback(hero?.title ?: "Anime Stream", stream, fallbackSources = fallbacks)
+                            if (hero != null && hasProvider(hero)) {
+                                selectCard(hero) // Cached/catalog streams must be freshly resolved before playback.
+                            } else {
+                                val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.ANIME } ?: emptyList()
+                                selectCard(null)
+                                activePlayback = ActivePlayback(hero?.title ?: "Anime Stream", stream, fallbackSources = fallbacks)
+                            }
                         }
                     )
 
@@ -483,12 +623,16 @@ fun CinatorApp() {
                         heroSubtitle = "Korean Scripted Drama • Isolated Store & Search",
                         onQueryChange = { q -> onSearchQueryChange(FeedSection.KDRAMA, q) },
                         onSync = { loadSection(FeedSection.KDRAMA, kdramaState.searchQuery) },
-                        onSelectCard = { selectedCard = it },
+                        onSelectCard = { selectCard(it) },
                         onQuickPlay = { stream ->
                             val hero = kdramaState.heroItem
-                            val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.KDRAMA } ?: emptyList()
-                            selectedCard = null
-                            activePlayback = ActivePlayback(hero?.title ?: "Drama Stream", stream, fallbackSources = fallbacks)
+                            if (hero != null && hasProvider(hero)) {
+                                selectCard(hero) // Cached/catalog streams must be freshly resolved before playback.
+                            } else {
+                                val fallbacks = hero?.streams?.filter { it.id != stream.id && it.section == FeedSection.KDRAMA } ?: emptyList()
+                                selectCard(null)
+                                activePlayback = ActivePlayback(hero?.title ?: "Drama Stream", stream, fallbackSources = fallbacks)
+                            }
                         }
                     )
 
@@ -506,14 +650,15 @@ fun CinatorApp() {
                                     bdixResults = bdixResults,
                                     bdixProbing = bdixProbing,
                                     catalog = catalog,
+                                    playbackProviders = providers.map { it.info },
                                     sectionStates = listOf(homeState, animeState, kdramaState, liveTvState, adultState),
                                     references = referencesResult.getOrNull(),
                                     referencesError = referencesResult.exceptionOrNull()?.message,
                                     onLiveTvQueryChange = { onSearchQueryChange(FeedSection.LIVETV, it) },
                                     onSyncLiveTv = { loadSection(FeedSection.LIVETV, liveTvState.searchQuery) },
-                                    onSelectCard = { selectedCard = it },
+                                    onSelectCard = { selectCard(it) },
                                     onPlayStream = { title, stream, path ->
-                                        selectedCard = null
+                                        selectCard(null)
                                         activePlayback = ActivePlayback(title, stream, localFilePath = path)
                                     },
                                     onToggleAdultOptIn = { enabled ->
@@ -522,7 +667,7 @@ fun CinatorApp() {
                                             loadSection(FeedSection.ADULT)
                                         } else {
                                             debounceCoordinator.cancel(FeedSection.ADULT)
-                                            selectedCard = null
+                                            selectCard(null)
                                             activePlayback = null
                                             adultState = FeedUiState(section = FeedSection.ADULT)
                                             wipeAdultCache()
@@ -609,6 +754,14 @@ private fun SectionFeedView(
         if (!state.isLoading && state.activeDisplayItems.isEmpty()) {
             item { Text(state.errorMessage ?: "Catalog unavailable: no entries from embedded adapters.",
                 color = CinatorMutedText, modifier = Modifier.padding(16.dp)) }
+        }
+
+        // Real resolved-provider entries remain accessible without scrolling through metadata rails.
+        val openFilms = state.activeDisplayItems.filter { it.providerId == "blender-open-films" }
+        if (openFilms.isNotEmpty()) {
+            item {
+                MediaRail(title = "Blender Open Films • resolve to watch", items = openFilms, onSelectCard = onSelectCard)
+            }
         }
 
         // Hero banner

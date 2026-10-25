@@ -7,7 +7,8 @@ import java.net.URLEncoder
 
 class CatalogRepository(
     val bundle: EmbeddedCatalog,
-    val http: TextHttpClient = BoundedHttpClient()
+    val http: TextHttpClient = BoundedHttpClient(),
+    val playbackProviders: List<com.cinator.app.providers.PlaybackProvider> = emptyList()
 ) {
     fun getSourcesForSection(section: FeedSection): List<EmbeddedSource> =
         bundle.sources.filter { it.section == section && it.enabled }
@@ -43,7 +44,15 @@ class CatalogRepository(
                 failures.add("${source.id}: ${progress.failed}/${progress.attempted} requests failed; completed results retained")
             }
         }
-        return CatalogLoadResult(items.filter { it.section == section }.distinctBy { it.providerId to it.id }, failures, sources.size)
+        val actualProviders = playbackProviders.filter { it.info.section == section && it.info.enabled }
+        for (provider in actualProviders) {
+            val progress = SourceProgress()
+            progress.attempt {
+                items.addAll(provider.catalog(search).filter { it.providerId == provider.info.id && it.belongsTo(section) })
+            }
+            if (progress.failed > 0) failures.add("${provider.info.id}: catalog unavailable")
+        }
+        return CatalogLoadResult(items.filter { it.belongsTo(section) }.distinctBy { it.providerId to it.id }, failures, sources.size + actualProviders.size)
     }
 
     private class SourceProgress {

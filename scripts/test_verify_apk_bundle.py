@@ -23,7 +23,7 @@ SCRIPT = Path(__file__).resolve().with_name('verify_apk_bundle.py')
 SPEC = importlib.util.spec_from_file_location('apk_bundle_verifier_under_test', SCRIPT)
 verifier = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(verifier)
-ASSET_NAMES = ('embedded_catalog.json', 'embedded_directory_snapshot.json')
+ASSET_NAMES = ('embedded_catalog.json', 'embedded_directory_snapshot.json', 'open_films.json')
 
 
 class VerifyApkBundleTests(unittest.TestCase):

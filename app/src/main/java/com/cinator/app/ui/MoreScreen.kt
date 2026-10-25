@@ -40,6 +40,7 @@ import com.cinator.app.domain.DownloadStatus
 import com.cinator.app.domain.FeedSection
 import com.cinator.app.domain.MediaCard
 import com.cinator.app.data.EmbeddedCatalog
+import com.cinator.app.downloads.CinatorDownloadManager
 import com.cinator.app.domain.StreamSource
 import com.cinator.app.ui.theme.CinatorAccent
 import com.cinator.app.ui.theme.CinatorBorder
@@ -60,6 +61,7 @@ fun MoreHubScreen(
     bdixProbing: Boolean,
     catalog: EmbeddedCatalog,
     sectionStates: List<FeedUiState>,
+    playbackProviders: List<com.cinator.app.providers.ProviderInfo>,
     references: ReferenceSnapshot?,
     referencesError: String?,
     onLiveTvQueryChange: (String) -> Unit,
@@ -202,7 +204,25 @@ fun MoreHubScreen(
                     source.endpoints.forEach { Text(it, color = CinatorMutedText, fontSize = 10.sp) }
                 }
             }
-            if (catalog.sources.isEmpty()) Text("Source bundle unavailable.", color = CinatorWarningYellow)
+            playbackProviders.forEach { provider ->
+                val state = sectionStates.firstOrNull { it.section == provider.section }
+                val issue = state?.providerFailures?.firstOrNull { it.startsWith(provider.id + ":") }
+                val status = when {
+                    !provider.enabled -> "Disabled"
+                    issue != null -> "Provider issue: $issue"
+                    state?.isLoading == true -> "Catalog loading"
+                    state?.isCached == true -> "Cached catalog; resolve before playback"
+                    state?.items?.any { it.providerId == provider.id } == true -> "Catalog registered; resolve to check current streams"
+                    else -> "Registered; availability not yet verified"
+                }
+                Column(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+                    Text(provider.name, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                    Text("${provider.section.displayName} • Playback adapter • $status", color = CinatorMetadataBlue, fontSize = 11.sp)
+                    Text("Declared play=${provider.capabilities.playback}, download=${provider.capabilities.download}. Registration is not a device playback result.", color = CinatorMutedText, fontSize = 11.sp)
+                    Text(provider.attributionUrl, color = CinatorMutedText, fontSize = 10.sp)
+                }
+            }
+            if (catalog.sources.isEmpty() && playbackProviders.isEmpty()) Text("Source bundle unavailable.", color = CinatorWarningYellow)
         }
 
         Spacer(Modifier.height(14.dp))
@@ -339,21 +359,11 @@ private fun DownloadRowItem(
                     fontSize = 11.sp
                 )
             }
-            if (entry.status == DownloadStatus.COMPLETED) {
+            val offlineSource = CinatorDownloadManager.offlineSource(entry)
+            if (offlineSource != null) {
                 Button(
                     onClick = {
-                        val stream = StreamSource(
-                            id = "offline_${entry.id}",
-                            label = "Offline MP4",
-                            url = entry.localFilePath,
-                            protocol = com.cinator.app.domain.StreamProtocol.MP4,
-                            quality = "Local Storage",
-                            isDownloadable = false,
-                            providerId = "local-file",
-                            contentId = entry.mediaId,
-                            section = entry.section
-                        )
-                        onPlayOffline(entry.title, stream, entry.localFilePath)
+                        onPlayOffline(entry.title, offlineSource, entry.localFilePath)
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = CinatorPlayableGreen)
                 ) {

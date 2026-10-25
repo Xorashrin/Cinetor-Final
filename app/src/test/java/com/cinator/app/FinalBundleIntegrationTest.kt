@@ -133,18 +133,14 @@ class FinalBundleIntegrationTest {
         val http = FakeTextHttpClient(responses)
         val result = CatalogRepository(registry, http).load(FeedSection.HOME)
         assertEquals(listOf(cinema.endpoints.single(), movieRoute, failedRoute) + tv.endpoints, http.calls)
-        assertEquals(3, result.sourceCount)
+        assertEquals(registry.sources.count { it.section == FeedSection.HOME && it.enabled }, result.sourceCount)
         assertEquals(listOf("${cinema.id}: 1/3 requests failed; completed results retained"), result.failures)
-        assertEquals(setOf("Fixture movie", "Ordinary drama", "MDN CC0 Flower Sample Video"), result.items.map { it.title }.toSet())
-        assertEquals(3, result.items.size)
+        assertEquals(setOf("Fixture movie", "Ordinary drama"), result.items.map { it.title }.toSet())
+        assertEquals(2, result.items.size)
         val metadata = result.items.filter { it.kind != MediaKind.VIDEO }
         assertEquals(setOf(cinema.id, tv.id), metadata.map { it.providerId }.toSet())
         assertTrue("Neither manifest stream capability nor another provider's sample supplies a movie stream", metadata.all { it.streams.isEmpty() })
-        val sample = result.items.single { it.kind == MediaKind.VIDEO }
-        val sampleProvider = registry.sources.single { it.engine == "OPEN_VIDEO" }
-        assertEquals(sampleProvider.id, sample.providerId)
-        assertEquals(sampleProvider.endpoints.single(), sample.streams.single().url)
-        assertStreamIdentity(sample, live = false)
+        assertTrue(result.items.none { it.kind == MediaKind.VIDEO })
     }
 
     @Test fun actualManifestSearchRequestsOnlyEligibleEncodedCatalogsAndOneTvMazeSearchRoute() {
@@ -160,7 +156,7 @@ class FinalBundleIntegrationTest {
         val result = CatalogRepository(registry, http).load(FeedSection.HOME, "  $query  ")
         assertEquals(listOf(cinema.endpoints.single(), movieRoute, seriesRoute, tvRoute), http.calls)
         assertTrue(result.failures.isEmpty())
-        assertEquals(3, result.sourceCount)
+        assertEquals(registry.sources.count { it.section == FeedSection.HOME && it.enabled }, result.sourceCount)
         assertEquals(setOf("Fixture movie", "Fixture series", "Ordinary drama"), result.items.map { it.title }.toSet())
         assertEquals(3, result.items.size)
         assertTrue(result.items.all { it.section == FeedSection.HOME && it.streams.isEmpty() })

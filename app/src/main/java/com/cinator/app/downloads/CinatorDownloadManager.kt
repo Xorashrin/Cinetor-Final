@@ -34,6 +34,25 @@ object CinatorDownloadManager {
 
     fun canDownloadStream(stream: StreamSource): Boolean = DownloadPolicy.canDownloadStream(stream)
 
+    /** Builds a local transport source without replacing its canonical remote identity. */
+    internal fun offlineSource(entry: DownloadEntry): StreamSource? {
+        val contentId = entry.contentId?.takeIf { it.isNotBlank() } ?: return null
+        val providerId = entry.providerId?.takeIf { it.isNotBlank() } ?: return null
+        val streamId = entry.streamId?.takeIf { it.isNotBlank() } ?: return null
+        if (entry.status != DownloadStatus.COMPLETED || entry.localFilePath.isBlank()) return null
+        return StreamSource(
+            id = streamId,
+            label = "Offline MP4",
+            url = entry.localFilePath,
+            protocol = com.cinator.app.domain.StreamProtocol.MP4,
+            quality = "Local Storage",
+            isDownloadable = false,
+            providerId = providerId,
+            contentId = contentId,
+            section = entry.section
+        )
+    }
+
     fun downloadDirectMp4(
         context: Context,
         card: MediaCard,
@@ -52,7 +71,8 @@ object CinatorDownloadManager {
         var entry = DownloadEntry(
             id = "dl_invalid", mediaId = card.id, title = card.title, section = card.section,
             sourceUrl = stream.url, localFilePath = "", bytesDownloaded = 0L, totalBytes = 0L,
-            status = DownloadStatus.FAILED
+            status = DownloadStatus.FAILED,
+            contentId = stream.contentId, providerId = stream.providerId, streamId = stream.id
         )
         return try {
             val key = DownloadPolicy.targetKey(card, stream)

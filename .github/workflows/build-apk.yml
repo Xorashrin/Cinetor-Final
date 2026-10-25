@@ -27,8 +27,10 @@ jobs:
           cmdline-tools-version: 12266719
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
           log-accepted-android-sdk-licenses: false
+      - name: Verify Python evidence tools
+        run: python3 -B -m unittest discover -s scripts -p 'test_*.py'
       - name: Run unit tests, lint, and build debug APK
-        run: ./gradlew --no-daemon --max-workers=2 testDebugUnitTest lintDebug assembleDebug
+        run: ./gradlew --no-daemon --max-workers=2 testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
       - name: Verify APK and embedded assets
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
@@ -42,6 +44,11 @@ jobs:
             app/build/outputs/apk/debug/SHA256SUMS
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
+        with:
+          name: cinator-instrumentation-apk
+          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cinator-test-reports
@@ -52,7 +59,7 @@ jobs:
   smoke:
     needs: build
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -63,6 +70,10 @@ jobs:
         with:
           name: cinator-debug-apk
           path: built-apk
+      - uses: actions/download-artifact@v4
+        with:
+          name: cinator-instrumentation-apk
+          path: built-test
       - name: Enable KVM
         run: sudo chmod 666 /dev/kvm
       - uses: reactivecircus/android-emulator-runner@v2
@@ -76,9 +87,13 @@ jobs:
           script: |
             adb install built-apk/app-debug.apk
             python3 scripts/android_smoke.py --output smoke-evidence
+            adb install built-test/app-debug-androidTest.apk
+            python3 scripts/run_provider_instrumentation.py provider-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cinator-android-smoke
-          path: smoke-evidence/
+          path: |
+            smoke-evidence/
+            provider-evidence/
           if-no-files-found: warn

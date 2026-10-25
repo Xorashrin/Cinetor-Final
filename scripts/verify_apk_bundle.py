@@ -13,7 +13,7 @@ def verify(apk_path):
         assert archive.testzip() is None, 'Corrupt ZIP entry'
         assert 'AndroidManifest.xml' in archive.namelist()
         assert 'classes.dex' in archive.namelist()
-        for name in ('embedded_catalog.json', 'embedded_directory_snapshot.json'):
+        for name in ('embedded_catalog.json', 'embedded_directory_snapshot.json', 'open_films.json'):
             expected = (root / 'app/src/main/assets' / name).read_bytes()
             actual = archive.read('assets/' + name)
             assert actual == expected, f'Asset mismatch: {name}'
