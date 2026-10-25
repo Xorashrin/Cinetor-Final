@@ -1,0 +1,26 @@
+{
+  "engine": "QuickJS 2026-06-04 (04be246)",
+  "sourceCommit": "04be246001599f5995fa2f2d8c91a0f198d3f34c",
+  "verification": {
+    "cmakeRelease": "configured and built successfully with GCC 14.2.0 and CMake 3.31.10",
+    "ctest": "12/12 passed; repeated until-fail:3 (36 executions), 0 failed",
+    "productionKotlinAbi": "NativeQuickJs.kt compiled with Kotlin 2.2.20/JDK 17; all 12 real-engine groups passed under -Xcheck:jni",
+    "sanitizers": "Not fully green: LeakSanitizer stopped after invalid-input on retained JDK allocations. With detect_leaks=0, nine groups passed before UBSan reported upstream quickjs.c:35549 signed left-shift overflow during fresh-state tests. Pinned vendor was not modified.",
+    "covered": [
+      "strict input and UTF-8 boundaries",
+      "arithmetic and pinned version",
+      "document/getStreams reviewed resolver at two heights",
+      "monotonic authored-loop timeouts",
+      "16 MiB OOM including caught OOM",
+      "256 KiB recursion failure",
+      "sanitized syntax/runtime/adversarial exceptions",
+      "return type and output byte limits",
+      "fresh runtime state",
+      "absence of std/os/network/Java capabilities"
+    ]
+  },
+  "issues": [
+    "Android NDK ABI/page alignment build not run: NDK/SDK integration is parent-owned and not installed for this slice",
+    "Device isolated-process/UID/IPC checks are parent integration tests"
+  ]
+}

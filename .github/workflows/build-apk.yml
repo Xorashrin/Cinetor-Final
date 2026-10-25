@@ -25,17 +25,23 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           cmdline-tools-version: 12266719
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0 ndk;28.2.13676358 cmake;3.31.6'
           log-accepted-android-sdk-licenses: false
       - name: Verify generated compatibility and review ledger
         run: python3 scripts/generate_compatibility_matrix.py --output app/src/main/assets/provider_compatibility.json --plugin-ledger-output app/src/main/assets/plugin_review_ledger.json --check
       - name: Verify Python evidence tools
         run: python3 -B -m unittest discover -s scripts -p 'test_*.py'
+      - name: Native engine host regression tests
+        run: |
+          cmake -S app/src/main/cpp -B native-host-build -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build native-host-build --parallel 2
+          ctest --test-dir native-host-build --output-on-failure
       - name: Run unit tests, lint, and build debug APK
         run: ./gradlew --no-daemon --max-workers=2 testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
       - name: Verify APK and embedded assets
         run: |
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 -v 4 app/build/outputs/apk/debug/app-debug.apk
           python3 scripts/verify_apk_bundle.py app/build/outputs/apk/debug/app-debug.apk
           sha256sum app/build/outputs/apk/debug/app-debug.apk > app/build/outputs/apk/debug/SHA256SUMS
       - uses: actions/upload-artifact@v4
@@ -91,6 +97,7 @@ jobs:
             python3 scripts/android_smoke.py --output smoke-evidence
             adb install built-test/app-debug-androidTest.apk
             python3 scripts/run_provider_instrumentation.py provider-evidence
+            python3 scripts/run_isolated_js_instrumentation.py isolated-js-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -98,4 +105,5 @@ jobs:
           path: |
             smoke-evidence/
             provider-evidence/
+            isolated-js-evidence/
           if-no-files-found: warn

@@ -1,5 +1,9 @@
 # Third-party notices and source attribution
 
+## Source-built QuickJS native slice (work in progress)
+
+Bellard QuickJS at commit `04be246001599f5995fa2f2d8c91a0f198d3f34c`, reported version 2026-06-04, is vendored under `vendor/quickjs/` with upstream MIT LICENSE and exact-file SHA-256 provenance. The project-owned JNI bridge does not include QuickJS-KT binaries, std/os libraries or a downloaded plugin runtime. Retain its MIT copyright/license when distributing. Source provenance does not by itself certify native memory safety or isolation. This is a limited authored-resolver experiment, not full Nuvio or CloudStream compatibility.
+
 - **TVMaze public API and returned metadata:** https://www.tvmaze.com/api — CC BY-SA 4.0. Credit TVMaze, link to each returned show's TVMaze URL, and comply with ShareAlike when redistributing derived datasets. API metadata is not an episode streaming license.
 - **Cinemeta:** https://v3-cinemeta.strem.io/manifest.json — catalog/meta service. Cinator uses protocol responses, not copied upstream application source; no rights to distribute film/episode streams are inferred. Metadata/artwork rights belong to their respective licensors.
 - **IPTV-org playlist data:** https://github.com/iptv-org/iptv — CC0 playlist data; individual broadcast content is separately controlled by its rights holders. Public availability does not imply download/recording rights. Geo-restricted/offline streams are not bypassed.

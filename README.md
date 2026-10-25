@@ -1,6 +1,8 @@
-# Cinator — v0.5 policy and compatibility preview
+# Cinator — v0.6 narrow native-runtime preview (device gate pending)
 
-**Phase 1 remains incomplete.** This increment adds truthful engine-status reporting and validation-only admission policies, not Nuvio JavaScript or CloudStream DEX execution. No new Internet Archive, France24, Anime/K-Drama or external-provider playback is activated. See [outstanding gates](docs/phase1-blockers.md).
+**Phase 1 remains incomplete.** The app now contains an actual source-built QuickJS native slice in an unexported Android isolated process for one authored, digest-pinned Blender metadata resolver. This proves only a narrow execution/IPC path—not Nuvio's full plugin host. Remote/community plugins, fetch/DOM/WASM/settings bindings and CloudStream DEX execution remain disabled. No new Internet Archive, France24, Anime/K-Drama or external-provider playback is activated. See [outstanding gates](docs/phase1-blockers.md).
+
+Host release and UBSan native suites pass 12/12; Android isolated-process execution/UID/death instrumentation is the current release gate. The fixed script accepts already-reviewed official Blender metadata and returns untrusted candidate JSON that the parent must validate; it never receives credentials or network/filesystem bindings.
 
 More → Engine compatibility displays the generated matrix. The separate `plugin_review_ledger.json` accounts for 162 unreviewed descriptor occurrences with unknown licensing/digest/signer fields. Counts are inventory, not working-provider counts. Existing Blender capabilities below remain unchanged.
 

@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinator"
         android:usesCleartextTraffic="false">
+        <service
+            android:name=".engines.nuvio.runtime.IsolatedQuickJsService"
+            android:exported="false"
+            android:isolatedProcess="true"
+            android:process=":isolated_quickjs"
+            android:stopWithTask="true" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"

@@ -1,0 +1,110 @@
+{
+  "repository": "https://github.com/bellard/quickjs",
+  "commit": "04be246001599f5995fa2f2d8c91a0f198d3f34c",
+  "version": "2026-06-04",
+  "license": "MIT",
+  "files": [
+    {
+      "file": "LICENSE",
+      "sha256": "598fd7fc928e4350abce36e337ba5a1346923c5c692f5be92c3d8e29ddd7c18d",
+      "bytes": 1130
+    },
+    {
+      "file": "VERSION",
+      "sha256": "234057c4079458cba9862d4bbb6f8a059ac2e4a194947673da0ad38ca16a37fd",
+      "bytes": 11
+    },
+    {
+      "file": "cutils.c",
+      "sha256": "b73a403a59da30726257ddbdf5e399298941c1def997782ee0d4d33f796a80a2",
+      "bytes": 17798
+    },
+    {
+      "file": "cutils.h",
+      "sha256": "d2da6d06a75b9e6c116c82b7a41df6bcc170c8b1779f374fa953ecf688eda647",
+      "bytes": 11162
+    },
+    {
+      "file": "dtoa.c",
+      "sha256": "af5abd68fa9806d1a19bdd5f2daef00d5fd0990ae56311382dfed4700343f074",
+      "bytes": 44875
+    },
+    {
+      "file": "dtoa.h",
+      "sha256": "462070f7678a894b9f3612422f280f4dce412eb360a5cc585a513f407fc23114",
+      "bytes": 3306
+    },
+    {
+      "file": "libregexp-opcode.h",
+      "sha256": "2a98d646089f3a72f25480116297c5fdb5b28fd9f815447273951f4ade4a115e",
+      "bytes": 2887
+    },
+    {
+      "file": "libregexp.c",
+      "sha256": "fdfcf86167029ab2c39c35730d4ae6875b7bbeb9406a0fcc886de4e9b1f5e2ac",
+      "bytes": 113209
+    },
+    {
+      "file": "libregexp.h",
+      "sha256": "f5c5ef1899f224dcc718422a22c789ef9d8b5b837b622818fcfaf681ae793446",
+      "bytes": 2737
+    },
+    {
+      "file": "libunicode-table.h",
+      "sha256": "cf782bc7a07549e976f606bd3cb8555858482b279574554dcb8d46412986006c",
+      "bytes": 252492
+    },
+    {
+      "file": "libunicode.c",
+      "sha256": "26203ae888c0582e7d0e2113f13db0c9b39dc7b0b3836d68fa308c54f7a0898c",
+      "bytes": 63617
+    },
+    {
+      "file": "libunicode.h",
+      "sha256": "ce310152bc80d7415dcb657e23abd9a40bf83e393c0d05d325dae384bb01d259",
+      "bytes": 5979
+    },
+    {
+      "file": "list.h",
+      "sha256": "181c6b25d9d0e4853315d36a6e6fab3b2c3554271693d898a439384ba0f67c2b",
+      "bytes": 3089
+    },
+    {
+      "file": "quickjs-atom.h",
+      "sha256": "342194359417664e652f54e7d682ee2ef91dd982e91f74decbde992a2c848236",
+      "bytes": 8295
+    },
+    {
+      "file": "quickjs-libc.h",
+      "sha256": "cfb4a6ab9533461a8abf8083f7d9f9a84d6bb26c92a7dd718984a7a1ddd754eb",
+      "bytes": 2919
+    },
+    {
+      "file": "quickjs-opcode.h",
+      "sha256": "a9c60a8c9366820733d9d2acbb805f48b2e9e2778df526e6bcb845fdb6b47834",
+      "bytes": 15801
+    },
+    {
+      "file": "quickjs.c",
+      "sha256": "c2e2150762a7847c96950532e742f8785bf7f4636d2e379b9bfa9f18950dbd48",
+      "bytes": 2033153,
+      "upstreamSha256": "a68622cecb806f39bf24738c376a0a73032ea8913478cad702e0265c46f7999f",
+      "localModification": "M2/M3/M4 pack opcode bytes with unsigned shifts then explicit int32_t conversion for int vararg ABI; fixes observed signed-shift UBSan."
+    },
+    {
+      "file": "quickjs.h",
+      "sha256": "2165f47772af9faee1798999a599fa9de850d1bf0259502dade1c25d4a588316",
+      "bytes": 47259
+    },
+    {
+      "file": "unicode_gen_def.h",
+      "sha256": "0c30cfd5dd29d7708f6e0045cb2e3ed92207697bb2b5eece39f336db007a055f",
+      "bytes": 7784
+    }
+  ],
+  "notIncluded": [
+    "quickjs-libc.c",
+    "qjs CLI std/os modules",
+    "remote plugin code"
+  ]
+}
