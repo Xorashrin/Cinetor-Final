@@ -140,7 +140,8 @@ class FixtureAndCliTest(unittest.TestCase):
             self.generator.build_plugin_review_ledger(self.snapshot)
 
     def test_raw_asset_cli_matrix_and_separate_ledger(self):
-        scratch = Path("/home/ASHRIN/.hermes/cache/scratch")
+        scratch = Path.home() / ".hermes/cache/scratch"
+        scratch.mkdir(parents=True, exist_ok=True)
         before = {p: p.read_bytes() for p in ASSETS.glob("*.json")}
         with tempfile.TemporaryDirectory(prefix="compat-raw-test-", dir=scratch) as directory:
             matrix = Path(directory) / "matrix.json"
@@ -274,7 +275,8 @@ class FixtureAndCliTest(unittest.TestCase):
                              self.generator.build_plugin_review_ledger(self.snapshot)))
 
     def test_cli_output_and_check_are_deterministic_and_do_not_publish_asset(self):
-        scratch = Path("/home/ASHRIN/.hermes/cache/scratch")
+        scratch = Path.home() / ".hermes/cache/scratch"
+        scratch.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="compat-test-", dir=scratch) as directory:
             base = Path(directory)
             files = []
