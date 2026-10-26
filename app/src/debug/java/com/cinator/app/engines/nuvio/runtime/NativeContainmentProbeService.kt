@@ -7,10 +7,6 @@ import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import java.io.File
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.net.SocketTimeoutException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -169,29 +165,17 @@ class NativeContainmentProbeService : Service() {
         catch (_: Exception) { "IO_ERROR" to "UNEXPECTED_ERROR" }
     }
 
-    private fun socket(): Pair<String, String> = try {
-        // Fixed example.org address; numeric bytes avoid DNS and caller-selected destinations.
-        Socket().use { socket ->
-            socket.connect(InetSocketAddress(InetAddress.getByAddress(
-                byteArrayOf(93, 184.toByte(), 215.toByte(), 14)), 80), 1000)
-        }
-        "CONNECTED" to "FIXED_EXAMPLE_IP"
-    } catch (_: SecurityException) { "DENIED" to "SECURITY_EXCEPTION" }
-    catch (_: SocketTimeoutException) { "TIMEOUT" to "CONNECT_TIMEOUT" }
-    catch (error: Exception) {
-        var cause: Throwable? = error
-        var errno: Int? = null
-        repeat(8) {
-            if (cause is ErrnoException) errno = (cause as ErrnoException).errno
-            cause = cause?.cause
-        }
-        when (errno) {
-            OsConstants.EACCES, OsConstants.EPERM -> "DENIED" to "EACCES_OR_EPERM"
-            OsConstants.ECONNREFUSED -> "REFUSED" to "ECONNREFUSED"
-            OsConstants.ENETUNREACH, OsConstants.EHOSTUNREACH -> "UNREACHABLE" to "NETWORK_UNREACHABLE"
-            OsConstants.ETIMEDOUT -> "TIMEOUT" to "CONNECT_TIMEOUT"
-            else -> "IO_ERROR" to "OTHER_ERRNO"
-        }
+    private fun socket(): Pair<String, String> {
+        // Direct creation preserves errno; no connection, DNS or destination needed.
+        val fd = try { Os.socket(OsConstants.AF_INET, OsConstants.SOCK_STREAM, 0) }
+        catch (_: SecurityException) { return "DENIED" to "SECURITY_EXCEPTION" }
+        catch (error: ErrnoException) {
+            return if (error.errno == OsConstants.EACCES || error.errno == OsConstants.EPERM)
+                "DENIED" to "EACCES_OR_EPERM" else "IO_ERROR" to "OTHER_ERRNO"
+        } catch (_: Exception) { return "IO_ERROR" to "UNEXPECTED_ERROR" }
+        // A close failure must never turn successful creation into a denial pass.
+        try { Os.close(fd) } catch (_: Exception) { return "IO_ERROR" to "CLOSE_ERROR" }
+        return "CREATED" to "TCP_SOCKET_CREATED"
     }
 
     private fun send(reply: Messenger, case: Case, event: String, outcome: String, detail: String,

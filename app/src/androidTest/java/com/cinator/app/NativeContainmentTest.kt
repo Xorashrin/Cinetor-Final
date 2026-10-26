@@ -7,6 +7,8 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.*
+import android.system.Os
+import android.system.OsConstants
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.cinator.app.engines.nuvio.runtime.IsolatedJsBroker
@@ -50,6 +52,9 @@ class NativeContainmentTest {
                 assertEquals(Process.myUid(), info.applicationInfo.uid)
                 assertEquals(PackageManager.PERMISSION_GRANTED,
                     context.checkSelfPermission(android.Manifest.permission.INTERNET))
+                val socketControl = Os.socket(OsConstants.AF_INET, OsConstants.SOCK_STREAM, 0)
+                Os.close(socketControl)
+                evidence.observe("parent_socket_control", obj("created" to true, "closed" to true, "uid" to Process.myUid()))
                 // Marker is created and verified by the app UID, never sent over IPC.
                 FileOutputStream(marker).use { it.write(MARKER.toByteArray()); it.fd.sync() }
                 assertEquals(MARKER, marker.readText())
