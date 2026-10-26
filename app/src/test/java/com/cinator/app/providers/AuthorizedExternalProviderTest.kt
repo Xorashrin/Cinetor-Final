@@ -40,6 +40,18 @@ class AuthorizedExternalProviderTest {
         assertFalse(provider.capabilities.catalogDiscovery)
     }
 
+    @Test fun asiancrushIsStrictlyKoreanScriptedDramaExternalNavigation() {
+        val asiancrushUrl = "https://www.asiancrush.com/video/010190v-voice"
+        val provider = AuthorizedExternalProvider.asiancrush(
+            listOf(OfficialContentRoute("Voice", asiancrushUrl, MediaKind.K_DRAMA, "KR"))
+        )
+
+        assertEquals(FeedSection.KDRAMA, provider.supportedSection)
+        assertEquals(MediaKind.K_DRAMA, provider.navigation("010190v-voice").kind)
+        assertTrue(provider.navigation("010190v-voice").rightsAndAvailabilityNotice.contains("AsianCrush"))
+        assertFalse(provider.capabilities.catalogDiscovery)
+    }
+
     @Test fun providerWithoutReviewedRoutesIsInactive() {
         val provider = AuthorizedExternalProvider.crunchyroll(emptyList())
         assertFalse(provider.active)

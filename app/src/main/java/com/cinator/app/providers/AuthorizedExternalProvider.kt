@@ -122,5 +122,17 @@ class AuthorizedExternalProvider private constructor(
                     "access is not guaranteed.",
                 "https://www.viki.com/legal/terms_of_use?locale=en", routes
             )
+
+        fun asiancrush(routes: List<OfficialContentRoute>): AuthorizedExternalProvider =
+            AuthorizedExternalProvider(
+                "asiancrush-external", FeedSection.KDRAMA, "www.asiancrush.com",
+                Regex("/video/([a-z0-9]+(?:-[a-z0-9]+)*)"),
+                MediaKind.K_DRAMA, "KR",
+                "Korean scripted television drama only; excludes non-Korean content. " +
+                    "External navigation only. AsianCrush controls login, ads, " +
+                    "subtitles and playback. Licensed availability varies by territory; " +
+                    "access is not guaranteed.",
+                "https://www.asiancrush.com/terms-of-service", routes
+            )
     }
 }

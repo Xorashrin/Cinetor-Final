@@ -327,6 +327,12 @@ fun MediaDetailDialog(
                     // External Link (if present)
                     card.externalUrl?.let { url ->
                         Spacer(Modifier.height(12.dp))
+                        val label = when {
+                            url.contains("viki.com", ignoreCase = true) -> "Open on Viki (Official)"
+                            url.contains("asiancrush.com", ignoreCase = true) -> "Open on AsianCrush (Official)"
+                            url.contains("tvmaze.com", ignoreCase = true) -> "Open TVMaze Reference"
+                            else -> "Open External Reference"
+                        }
                         OutlinedButton(
                             onClick = { onOpenExternal(url) },
                             modifier = Modifier.fillMaxWidth(),
@@ -334,7 +340,7 @@ fun MediaDetailDialog(
                         ) {
                             Icon(Icons.Default.OpenInBrowser, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(Modifier.width(6.dp))
-                            Text("Open External Reference", fontSize = 12.sp)
+                            Text(label, fontSize = 12.sp)
                         }
                     }
 
