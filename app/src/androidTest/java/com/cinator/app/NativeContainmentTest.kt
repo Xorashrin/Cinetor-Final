@@ -90,25 +90,36 @@ class NativeContainmentTest {
                 Triple("native_oom", "OOM", "OUT_OF_MEMORY"),
                 Triple("native_stack", "STACK", "ENGINE_ERROR"),
                 Triple("native_output_limit", "OUTPUT_LIMIT", "OUTPUT_LIMIT"),
-                Triple("private_file_denied", "PRIVATE_FILE", "DENIED"),
+                Triple("private_file_inaccessible", "PRIVATE_FILE", "INACCESSIBLE"),
                 Triple("socket_denied", "SOCKET", "DENIED"))) {
                 evidence.stage(stage) {
                     Endpoint(probeComponent).use { endpoint ->
                         endpoint.connect()
+                        if (name == "PRIVATE_FILE") verifyPrivateMarker("before", marker, evidence)
                         endpoint.send(name)
                         val reply = endpoint.reply(name)
                         evidence.observe(stage, reply)
-                        assertEquals(expected, reply.getString("outcome"))
+                        if (name == "PRIVATE_FILE") {
+                            verifyPrivateMarker("after", marker, evidence)
+                            // Do not canonicalize: the isolated mount namespace may hide this path.
+                            assertEquals(marker.absolutePath, reply.getString("markerPath"))
+                            val outcome = reply.getString("outcome")
+                            val detail = reply.getString("detail")
+                            val mode = when {
+                                outcome == "DENIED" && detail in setOf("EACCES", "EPERM", "SECURITY_EXCEPTION") ->
+                                    "permission_denied"
+                                outcome == "NOT_FOUND" && detail == "ENOENT" ->
+                                    "isolated_namespace_not_visible"
+                                else -> throw AssertionError("Private marker unexpectedly accessible or probe failed: $outcome/$detail")
+                            }
+                            evidence.observe(stage, reply.put("isolationMode", mode))
+                        } else assertEquals(expected, reply.getString("outcome"))
                         assertEquals("RESULT", reply.getString("event"))
                         assertTrue(pids.add(reply.getInt("pid")))
                         assertTrue(reply.getLong("elapsedMs") in 0..4000)
                         if (name in setOf("TIMEOUT", "OOM", "STACK", "OUTPUT_LIMIT")) {
                             assertEquals(ENGINE, reply.getString("engineVersion"))
                             assertEquals(0, reply.getInt("resultBytes"))
-                        }
-                        if (name == "PRIVATE_FILE") {
-                            assertEquals("EACCES_OR_EPERM", reply.getString("detail"))
-                            assertEquals(MARKER, marker.readText())
                         }
                         if (name == "SOCKET") {
                             assertEquals(PackageManager.PERMISSION_DENIED, reply.getInt("internetPermission"))
@@ -182,6 +193,19 @@ class NativeContainmentTest {
         }
     }
 
+    private fun verifyPrivateMarker(whenChecked: String, marker: File, evidence: Evidence) {
+        val exists = marker.isFile
+        val readable = marker.canRead()
+        val contentMatches = runCatching { marker.readText() == MARKER }.getOrDefault(false)
+        evidence.observe("private_file_parent_$whenChecked", obj(
+            "markerPath" to marker.absolutePath, "uid" to Process.myUid(),
+            "exists" to exists, "readable" to readable, "contentMatches" to contentMatches))
+        assertEquals(context.applicationInfo.uid, Process.myUid())
+        assertTrue("App marker must exist $whenChecked probe", exists)
+        assertTrue("App marker must be readable $whenChecked probe", readable)
+        assertTrue("App marker contents must match $whenChecked probe", contentMatches)
+    }
+
     private fun identity(uid: Int, pid: Int) {
         assertTrue(uid > 0 && uid != Process.myUid())
         assertTrue(pid > 0 && pid != Process.myPid())
@@ -245,8 +269,14 @@ class NativeContainmentTest {
                 assertEquals(0, message.arg2)
                 assertNull(message.obj); assertNull(message.replyTo)
                 val data = message.data
-                assertEquals(setOf("case", "event", "outcome", "detail", "uid", "pid", "engineVersion",
-                    "elapsedMs", "resultBytes", "internetPermission"), data.keySet())
+                val expectedKeys = setOf("case", "event", "outcome", "detail", "uid", "pid", "engineVersion",
+                    "elapsedMs", "resultBytes", "internetPermission") +
+                    if (name == "PRIVATE_FILE") setOf("markerPath") else emptySet()
+                assertEquals(expectedKeys, data.keySet())
+                if (name == "PRIVATE_FILE") {
+                    assertTrue(data.get("markerPath") is String)
+                    assertTrue(data.getString("markerPath")!!.length in 1..1024)
+                }
                 for (key in setOf("case", "event", "outcome", "detail", "engineVersion")) {
                     assertTrue(data.get(key) is String)
                     assertTrue(data.getString(key)!!.length <= 128)

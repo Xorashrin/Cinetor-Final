@@ -26,7 +26,7 @@ MAX_RESULT_BYTES = 2 * 1024 * 1024
 MAX_ARCHIVE_BYTES = 4 * 1024 * 1024
 REQUIRED_STAGES = frozenset((
     "manifest", "probe_admission", "native_promise", "native_timeout", "native_oom", "native_stack", "native_output_limit",
-    "private_file_denied", "socket_denied", "watchdog_death", "crash_death",
+    "private_file_inaccessible", "socket_denied", "watchdog_death", "crash_death",
     "healthy_production_rebind",
 ))
 
@@ -86,8 +86,28 @@ def validate_evidence(raw):
     require(isinstance(not_verified, list) and
             all(isinstance(item, str) and item.strip() for item in not_verified),
             "Missing or malformed notVerified limitations")
-    # Android assertions own exact native outcomes, isolation identities and app
-    # UID agreement. Do not invent observation keys or infer them from host logs.
+    # Mirror the private-file oracle; preserve device bytes and errno distinctions.
+    observations = result["observations"]
+    private = observations.get("private_file_inaccessible")
+    require(isinstance(private, dict) and private.get("case") == "PRIVATE_FILE" and
+            private.get("event") == "RESULT", "Missing private-file observation")
+    path = private.get("markerPath")
+    require(isinstance(path, str) and 0 < len(path) <= 1024 and path.startswith("/") and
+            path.endswith("/files/native-containment-private.txt"), "Invalid fixed marker path")
+    for phase in ("before", "after"):
+        control = observations.get("private_file_parent_" + phase)
+        require(isinstance(control, dict) and control.get("markerPath") == path and
+                integer(control.get("uid"), 1) and control["uid"] == result["appUid"] and
+                all(control.get(key) is True for key in ("exists", "readable", "contentMatches")),
+                "Missing exact-path app-UID positive control: " + phase)
+    observed = (private.get("outcome"), private.get("detail"), private.get("isolationMode"))
+    require(observed in (
+        ("DENIED", "EACCES", "permission_denied"),
+        ("DENIED", "EPERM", "permission_denied"),
+        ("DENIED", "SECURITY_EXCEPTION", "permission_denied"),
+        ("NOT_FOUND", "ENOENT", "isolated_namespace_not_visible")),
+        "Invalid private-file isolation outcome/detail/mode")
+    # Android assertions own the remaining native outcomes and isolated identities.
 
 
 def collect(out):

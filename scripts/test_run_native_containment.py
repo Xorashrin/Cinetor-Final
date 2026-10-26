@@ -13,7 +13,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parent
 SCRATCH = Path.home() / ".hermes/cache/scratch"
 STAGES = ["manifest", "probe_admission", "native_promise", "native_timeout", "native_oom", "native_stack",
-          "native_output_limit", "private_file_denied", "socket_denied",
+          "native_output_limit", "private_file_inaccessible", "socket_denied",
           "watchdog_death", "crash_death", "healthy_production_rebind"]
 PROTOCOL = b"OK (1 test)\nINSTRUMENTATION_CODE: -1\n"
 
@@ -21,7 +21,17 @@ PROTOCOL = b"OK (1 test)\nINSTRUMENTATION_CODE: -1\n"
 def unit_evidence():
     return {"test": "NativeContainmentTest", "status": "PASSED", "appUid": 10123,
             "appPid": 1234, "stages": [{"name": n, "status": "PASSED"} for n in STAGES],
-            "observations": {"UNIT_ONLY": "synthetic, not device evidence"},
+            "observations": {"UNIT_ONLY": "synthetic, not device evidence",
+                "private_file_inaccessible": {
+                    "case": "PRIVATE_FILE", "event": "RESULT", "outcome": "NOT_FOUND",
+                    "detail": "ENOENT", "markerPath": "/data/user/0/com.cinator.app/files/native-containment-private.txt",
+                    "isolationMode": "isolated_namespace_not_visible"},
+                "private_file_parent_before": {
+                    "markerPath": "/data/user/0/com.cinator.app/files/native-containment-private.txt",
+                    "uid": 10123, "exists": True, "readable": True, "contentMatches": True},
+                "private_file_parent_after": {
+                    "markerPath": "/data/user/0/com.cinator.app/files/native-containment-private.txt",
+                    "uid": 10123, "exists": True, "readable": True, "contentMatches": True}},
             "notVerified": ["UNIT fixture does not verify Android containment"]}
 
 
@@ -86,6 +96,44 @@ class NativeRunnerUnitTest(unittest.TestCase):
         self.assertTrue(any("logcat" in c[0] for c in self.calls))
         self.assertTrue(any("tar" in c[0] for c in self.calls))
 
+    def test_unit_private_file_requires_exact_positive_controls(self):
+        base = unit_evidence()
+        self.runner.validate_evidence(json.dumps(base).encode())
+        for key in ("private_file_inaccessible", "private_file_parent_before", "private_file_parent_after"):
+            data = copy.deepcopy(base)
+            del data["observations"][key]
+            with self.subTest(missing=key), self.assertRaises(ValueError):
+                self.runner.validate_evidence(json.dumps(data).encode())
+        for key in ("private_file_parent_before", "private_file_parent_after"):
+            for field, value in (("exists", False), ("readable", False), ("contentMatches", False),
+                                 ("exists", 1), ("readable", 1), ("contentMatches", 1),
+                                 ("uid", 99000), ("uid", True), ("uid", 10123.0),
+                                 ("markerPath", "/wrong/native-containment-private.txt")):
+                data = copy.deepcopy(base)
+                data["observations"][key][field] = value
+                with self.subTest(key=key, field=field, value=value), self.assertRaises(ValueError):
+                    self.runner.validate_evidence(json.dumps(data).encode())
+
+    def test_unit_private_file_preserves_errno_distinctions(self):
+        valid = (("NOT_FOUND", "ENOENT", "isolated_namespace_not_visible"),
+                 ("DENIED", "EACCES", "permission_denied"),
+                 ("DENIED", "EPERM", "permission_denied"),
+                 ("DENIED", "SECURITY_EXCEPTION", "permission_denied"))
+        for outcome, detail, mode in valid:
+            data = unit_evidence()
+            data["observations"]["private_file_inaccessible"].update(
+                outcome=outcome, detail=detail, isolationMode=mode)
+            self.runner.validate_evidence(json.dumps(data).encode())
+        for field, value in (("outcome", "READABLE"), ("outcome", "DENIED"),
+                             ("outcome", "IO_ERROR"), ("detail", "EACCES"),
+                             ("detail", "OTHER_ERRNO"), ("detail", "UNEXPECTED_ERROR"),
+                             ("isolationMode", "permission_denied"), ("case", "SOCKET"),
+                             ("event", "STARTED"), ("markerPath", "/wrong")):
+            data = unit_evidence()
+            data["observations"]["private_file_inaccessible"][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                self.runner.validate_evidence(json.dumps(data).encode())
+
     def test_unit_schema_rejects_missing_or_wrong_fields(self):
         base = unit_evidence()
         for key in base:
@@ -102,7 +150,7 @@ class NativeRunnerUnitTest(unittest.TestCase):
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 self.runner.validate_evidence(json.dumps(data).encode())
 
-    def test_unit_requires_exact_ten_unique_passing_stages(self):
+    def test_unit_requires_exact_twelve_unique_passing_stages(self):
         for stages in [[], None, {}, unit_evidence()["stages"][:-1],
                        unit_evidence()["stages"] + [{"name": "extra", "status": "PASSED"}],
                        unit_evidence()["stages"][:-1] + [unit_evidence()["stages"][0]]]:
@@ -110,7 +158,7 @@ class NativeRunnerUnitTest(unittest.TestCase):
             data["stages"] = stages
             with self.subTest(stages=stages), self.assertRaises(ValueError):
                 self.runner.validate_evidence(json.dumps(data).encode())
-        for index in range(10):
+        for index in range(len(STAGES)):
             for mutation in [{"status": "FAILED"}, {"name": "unknown"},
                              {"exception": "UNIT failure"}, {"name": []}]:
                 data = unit_evidence()

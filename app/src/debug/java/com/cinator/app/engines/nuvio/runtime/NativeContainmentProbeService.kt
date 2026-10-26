@@ -95,9 +95,12 @@ class NativeContainmentProbeService : Service() {
         var detail = "NONE"
         var bytes = 0
         var permission = -2
+        // Locally derived fixed fixture only; no request can supply a path.
+        val marker = if (case == Case.PRIVATE_FILE)
+            File(applicationInfo.dataDir, "files/native-containment-private.txt") else null
         when (case) {
             Case.PRIVATE_FILE -> {
-                val result = privateFile()
+                val result = privateFile(requireNotNull(marker))
                 outcome = result.first; detail = result.second
             }
             Case.SOCKET -> {
@@ -133,7 +136,7 @@ class NativeContainmentProbeService : Service() {
                 catch (_: Exception) { outcome = "UNEXPECTED_ERROR" }
             }
         }
-        send(reply, case, "RESULT", outcome, detail, start, version, bytes, permission)
+        send(reply, case, "RESULT", outcome, detail, start, version, bytes, permission, marker?.absolutePath)
     }
 
     private fun source(case: Case): String = when (case) {
@@ -146,9 +149,8 @@ class NativeContainmentProbeService : Service() {
         else -> error("NOT_NATIVE_CASE")
     }
 
-    private fun privateFile(): Pair<String, String> {
-        // applicationInfo.dataDir belongs to the installed app, unlike an isolated UID's home.
-        val marker = File(applicationInfo.dataDir, "files/native-containment-private.txt")
+    private fun privateFile(marker: File): Pair<String, String> {
+        // Android may hide the app data mount: preserve ENOENT, never relabel it DENIED.
         return try {
             val closeOnExec = if (Build.VERSION.SDK_INT >= 27) OsConstants.O_CLOEXEC else 0
             val fd = Os.open(marker.absolutePath, OsConstants.O_RDONLY or closeOnExec, 0)
@@ -158,7 +160,8 @@ class NativeContainmentProbeService : Service() {
             } finally { Os.close(fd) }
         } catch (error: ErrnoException) {
             when (error.errno) {
-                OsConstants.EACCES, OsConstants.EPERM -> "DENIED" to "EACCES_OR_EPERM"
+                OsConstants.EACCES -> "DENIED" to "EACCES"
+                OsConstants.EPERM -> "DENIED" to "EPERM"
                 OsConstants.ENOENT -> "NOT_FOUND" to "ENOENT"
                 else -> "IO_ERROR" to "OTHER_ERRNO"
             }
@@ -192,11 +195,13 @@ class NativeContainmentProbeService : Service() {
     }
 
     private fun send(reply: Messenger, case: Case, event: String, outcome: String, detail: String,
-        start: Long, version: String = "NOT_APPLICABLE", bytes: Int = 0, permission: Int = -2) {
+        start: Long, version: String = "NOT_APPLICABLE", bytes: Int = 0, permission: Int = -2,
+        markerPath: String? = null) {
         val message = Message.obtain().apply {
             what = 101; arg1 = 1
             data = Bundle().apply {
                 putString("case", case.name); putString("event", event)
+                if (case == Case.PRIVATE_FILE) putString("markerPath", requireNotNull(markerPath))
                 putString("outcome", outcome); putString("detail", detail)
                 putString("engineVersion", version.take(128))
                 putInt("uid", Process.myUid()); putInt("pid", Process.myPid())
